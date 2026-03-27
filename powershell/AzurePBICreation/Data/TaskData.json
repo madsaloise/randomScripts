@@ -1,0 +1,35 @@
+{
+"ImportantInformation" : "OBS! Der SKAL udfyldes CreateMonth (1-12). Listen skal være kommasepareret - eksempel 1,3,5,6,10,11,12",
+"Features" : [
+    {
+        "Name" : "NameOfFeature",
+        "Description" : "Write something",
+        "ParentId" : 19,
+        "State" : "To Do",
+        "CreateMonth" : "1",
+        "AreaPath" : "Analysts\\\\Development",
+        "Owner" : "Name of devops user",
+        "ProductBacklogItems" : [
+            {
+                "Name" : "NameOfPBI",
+                "Description" : "Write Something",
+                "ParentId" : null,
+                "State" : "Committed",
+                "CreateMonth" : "1",
+                "Tasks" : [
+                    {
+                        "Name" : "NameOfTask",
+                        "Description" : "Write Something",
+                        "ParentId" : null,
+                        "State" : "To Do"
+                    }
+                ]
+
+            }
+            
+
+        ]
+        
+    }
+]
+}

@@ -1,0 +1,172 @@
+<#
+Invoke-SQLReportMail -SqlFileName    "Productiondata.sql" ` #File with SQL query
+                     -RowFields      @("Field1", "Field2") `
+                     -ColumnField    "MonthYear" `
+                     -ValueFields    @("Forhold", "Komplekser", "SBHFraAnm") ` #Summable fields
+                     -Recipients     @("andersand@gmail.dk") ` #Mail recipient
+                     -ServerInstance "sqlservername.net" `
+                     -Subject        "ProductionReport" `
+                     -Totals
+
+Requires importing Send-OutlookMail
+#>
+
+
+function Invoke-SQLReportMail {
+    param(
+        [Parameter(Mandatory)][string]$SqlFileName,
+        [Parameter(Mandatory)][string[]]$RowFields,
+        [Parameter(Mandatory)][string]$ColumnField,
+        [Parameter(Mandatory)][string[]]$ValueFields,
+        [Parameter(Mandatory)][string[]]$Recipients,
+        [Parameter(Mandatory)][string]$ServerInstance,
+        [Parameter(Mandatory)][string]$Subject,
+        [switch]$Totals
+    )
+    $null = Start-Transcript -Path (Join-Path $PSScriptRoot "Invoke-SQLReportMail.txt")
+    $QueryPath = "E:\MchWork-1\MonthlyTasks\Modules\Queries"
+    $SqlParams = @{
+        ServerInstance         = $ServerInstance
+        Database               = "DWH"
+        TrustServerCertificate = $true
+    }
+
+    try {
+        $sqlFile = Join-Path $QueryPath $SqlFileName
+        if (-not (Test-Path $sqlFile)) { throw "SQL-fil ikke fundet: $sqlFile" }
+
+        $query  = Get-Content $sqlFile -Raw
+        $result = @(Invoke-Sqlcmd @SqlParams -Query $query)
+
+        if (-not $result) { throw "Forespørgslen returnerede ingen data." }
+
+        $table = Format-PivotHtmlTable -Data $result `
+                                       -RowFields $RowFields `
+                                       -ColumnField $ColumnField `
+                                       -ValueFields $ValueFields `
+                                       -Totals:$Totals
+
+        Send-OutlookMail -To $Recipients `
+                         -Subject $Subject `
+                         -Body $table `
+                         -IsHtml
+    }
+    catch {
+        Write-Warning "[SQLReportMail] Fejl: $_"
+        Send-OutlookMail -To $Recipients `
+                         -Subject "Fejl i Invoke-SQLReportMail ($SqlFileName)" `
+                         -Body "$_"
+    } finally {
+        $null = Stop-Transcript
+    }
+}
+
+function Format-PivotHtmlTable {
+    param(
+        [object[]]$Data,
+        [string[]]$RowFields,
+        [string]$ColumnField,
+        [string[]]$ValueFields,
+        [switch]$Totals
+    )
+
+    $columnValues = $Data | Select-Object -ExpandProperty $ColumnField -Unique
+
+    $rowCombos = [System.Collections.Generic.List[object]]::new()
+    $seen      = [System.Collections.Generic.HashSet[string]]::new()
+    foreach ($row in $Data) {
+        $key = ($RowFields | ForEach-Object { $row.$_ }) -join "|"
+        if ($seen.Add($key)) {
+            $combo = @{}
+            foreach ($rf in $RowFields) { $combo[$rf] = $row.$rf }
+            $rowCombos.Add($combo)
+        }
+    }
+
+    # Index data
+    $index = @{}
+    foreach ($row in $Data) {
+        $col = $row.$ColumnField
+        $key = ($RowFields | ForEach-Object { $row.$_ }) -join "|"
+        if (-not $index[$col])     { $index[$col] = @{} }
+        if (-not $index[$col][$key]) { $index[$col][$key] = @{} }
+        foreach ($v in $ValueFields) { $index[$col][$key][$v] = $row.$v }
+    }
+
+    $sb = [System.Text.StringBuilder]::new()
+    [void]$sb.AppendLine("<table style='border-collapse:collapse; font-family:Calibri,sans-serif; font-size:13px;'>")
+
+    # Row 1
+    [void]$sb.AppendLine("<tr>")
+    foreach ($rf in $RowFields) {
+        [void]$sb.AppendLine("<th style='border:1px solid #999; padding:6px 12px; background:#2d5f8a; color:#fff;'></th>")
+    }
+    foreach ($col in $columnValues) {
+        $span = $ValueFields.Count
+        [void]$sb.AppendLine("<th colspan='$span' style='border:1px solid #999; padding:6px 12px; background:#2d5f8a; color:#fff; text-align:center;'>$col</th>")
+    }
+    [void]$sb.AppendLine("</tr>")
+
+    # Row 2
+    [void]$sb.AppendLine("<tr>")
+    foreach ($rf in $RowFields) {
+        [void]$sb.AppendLine("<th style='border:1px solid #999; padding:6px 12px; background:#dce6f1; color:#333; text-align:left;'>$rf</th>")
+    }
+    foreach ($col in $columnValues) {
+        foreach ($v in $ValueFields) {
+            [void]$sb.AppendLine("<th style='border:1px solid #999; padding:6px 12px; background:#dce6f1; color:#333; text-align:right;'>$v</th>")
+        }
+    }
+    [void]$sb.AppendLine("</tr>")
+
+    # Data
+    $rowNum       = 0
+    foreach ($combo in $rowCombos) {
+        $key = ($RowFields | ForEach-Object { $combo[$_] }) -join "|"
+        $bg  = if ($rowNum % 2 -eq 0) { "#ffffff" } else { "#f4f8fc" }
+        [void]$sb.AppendLine("<tr style='background:$bg;'>")
+
+        for ($i = 0; $i -lt $RowFields.Count; $i++) {
+            $rf  = $RowFields[$i]
+            $val = $combo[$rf]
+
+            if ($i -eq 0) {
+                $style = "border:1px solid #ccc; padding:6px 12px; font-weight:bold;"
+            } else {
+                $indent = $i * 20
+                $style  = "border:1px solid #ccc; padding:6px 12px 6px $($indent + 12)px; color:#555;"
+            }
+
+            [void]$sb.AppendLine("<td style='$style'>$val</td>")
+        }
+
+        foreach ($col in $columnValues) {
+            foreach ($v in $ValueFields) {
+                $val = if ($index[$col][$key] -and $null -ne $index[$col][$key][$v]) { $index[$col][$key][$v] } else { "" }
+                [void]$sb.AppendLine("<td style='border:1px solid #ccc; padding:6px 12px; text-align:right;'>$val</td>")
+            }
+        }
+
+        [void]$sb.AppendLine("</tr>")
+        $rowNum++
+    }
+
+    # Totals 
+    if ($Totals) {
+        $totalCols = $RowFields.Count
+        [void]$sb.AppendLine("<tr style='background:#dce6f1; font-weight:bold;'>")
+        [void]$sb.AppendLine("<td colspan='$totalCols' style='border:1px solid #999; padding:6px 12px;'>Hovedtotal</td>")
+        foreach ($col in $columnValues) {
+            foreach ($v in $ValueFields) {
+                $sum = ($Data | Where-Object { $_.$ColumnField -eq $col } | Measure-Object -Property $v -Sum).Sum
+                [void]$sb.AppendLine("<td style='border:1px solid #999; padding:6px 12px; text-align:right;'>$sum</td>")
+            }
+        }
+        [void]$sb.AppendLine("</tr>")
+    }
+
+    [void]$sb.AppendLine("</table>")
+    return $sb.ToString()
+}
+
+Export-ModuleMember -Function Invoke-SQLReportMail
