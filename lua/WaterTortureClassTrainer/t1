@@ -1,0 +1,22 @@
+function(s,e, ...)
+    
+    
+    
+    if not aura_env.FailedCasts then
+        aura_env.FailedCasts = 0
+    end
+    if InCombatLockdown() then
+        local _, spellID, _, _, _, _, _, _, _, _, _, _, _, _, _ = ...
+        local skb_exp=select(6,WA_GetUnitBuff("player",383883, "player"))
+        
+        if skb_exp then
+            local skb_dura = skb_exp-GetTime()
+            if s == "UNIT_SPELLCAST_SUCCEEDED"     then
+                if  (spellID == 11366 or spellID == 2120) and skb_dura < 29.5 then
+                    aura_env.FailedCasts = aura_env.FailedCasts + 1
+                end 
+            end
+        end
+        return aura_env.FailedCasts
+    end
+end
