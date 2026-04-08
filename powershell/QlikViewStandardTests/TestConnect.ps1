@@ -112,10 +112,10 @@ catch {
 Write-EnhancedLog "`nTesting QlikView Desktop connectivity to accesspoint" -ForegroundColor Cyan
 
 switch($QMSHost) {
-    "qlikview-qmc-t.anklagemyndigheden.net" {
+    "qlikview-qmc-t.Server.net" {
         $fileToOpen = "qvp://$($qmcHostTest)/Opslagstabeller.qvw"
     } 
-    "qlikview-qmc.anklagemyndigheden.net" {
+    "qlikview-qmc.Server.net" {
         $fileToOpen = "qvp://$($qmcHostProd)/Opslagstabeller.qvw"
     }        
 }
