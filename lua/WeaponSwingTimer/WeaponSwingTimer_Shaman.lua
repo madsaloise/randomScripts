@@ -56,18 +56,19 @@ local function IsSwingsSynced()
     local main_speed = addon_data.player.main_weapon_speed
     local threshold  = character_shaman_settings.sync_threshold
 
-    -- Case A: upcoming MH fires [0, threshold] seconds before upcoming OH
+    local min_gap = 0.05
+
+    -- Case A: upcoming MH fires [min_gap, threshold] seconds before upcoming OH
     local delta = off_timer - main_timer
-    if delta >= 0 and delta <= threshold then
+    if delta >= min_gap and delta <= threshold then
         return true
     end
 
     -- Case B: MH just fired (main_timer reset to ~main_speed), and OH fires within
-    -- threshold seconds after where MH was — equivalent to checking whether the
-    -- elapsed time since MH fired plus the remaining OH timer is within threshold.
-    -- Algebraically: off_timer - (main_timer - main_speed) in [0, threshold].
+    -- [min_gap, threshold] seconds of where MH was.
+    -- Algebraically: off_timer - (main_timer - main_speed) in [min_gap, threshold].
     local past_delta = off_timer - (main_timer - main_speed)
-    if past_delta >= 0 and past_delta <= threshold then
+    if past_delta >= min_gap and past_delta <= threshold then
         return true
     end
 
