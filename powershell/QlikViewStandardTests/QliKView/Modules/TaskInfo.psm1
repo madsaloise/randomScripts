@@ -33,7 +33,7 @@ function Get-TaskByName {
         $qdsServices = @($qdsResult.ServiceInfo)
         
         if (-not $qdsServices -or $qdsServices.Count -eq 0) {
-            Write-EnhancedLog "No QDS services found" -ForegroundColor Yellow
+            Write-EnhancedLog "No QDS services" -ForegroundColor Yellow
             return $null
         }
     }
@@ -58,12 +58,12 @@ function Get-TaskByName {
             }
         }
         catch {
-            Write-EnhancedLog "Could not retrieve tasks from QDS: $($_.Exception.Message)" -ForegroundColor Red
+            Write-EnhancedLog "Could not retrieve tasks: $($_.Exception.Message)" -ForegroundColor Red
         }
     }
     
     if ($matchingTasks.Count -eq 0) {
-        Write-EnhancedLog "No tasks found matching: $TaskName" -ForegroundColor Yellow
+        Write-EnhancedLog "No tasks found for: $TaskName" -ForegroundColor Yellow
         return $null
     }
     
@@ -149,7 +149,7 @@ function Invoke-TaskWithMonitoring {
     )
     
     # Kan ikke ID i hovedet så finder pba. navn
-    Write-EnhancedLog "Searching for task: $TaskName" -ForegroundColor Cyan
+    Write-EnhancedLog "Finding task ID for: $TaskName" -ForegroundColor Cyan
     $tasks = Get-TaskByName -ApiClient $ApiClient -TaskName $TaskName
     
     if (-not $tasks) {
@@ -159,7 +159,7 @@ function Invoke-TaskWithMonitoring {
     
     $taskArray = @($tasks)
     if ($taskArray.Count -gt 1) {
-        Write-EnhancedLog "`nMultiple tasks found. Select one to run:" -ForegroundColor Yellow
+        Write-EnhancedLog "`nMultiple tasks found. Select one:" -ForegroundColor Yellow
         for ($i = 0; $i -lt $taskArray.Count; $i++) {
             Write-EnhancedLog "  $($i + 1). $($taskArray[$i].Name)"
         }
@@ -184,14 +184,11 @@ function Invoke-TaskWithMonitoring {
     }
     
     try {       
-        # Run task
         Write-EnhancedLog "Running task: '$TaskID'..." -ForegroundColor Cyan
-        
         $ApiClient.InvokeMethod("RunTask", @{ taskID = $TaskID })
-        Write-EnhancedLog "Task execution initiated. Monitoring status..." -ForegroundColor Green
+        Write-EnhancedLog "Task started.." -ForegroundColor Green
         Start-Sleep -Seconds $PollInterval
         
-        # Poll completion (waiting)
         Do {
             Start-Sleep -Seconds $PollInterval
             $taskStatus = Get-TaskStatus -ApiClient $ApiClient -TaskID $TaskID -Scope "All"
@@ -201,12 +198,12 @@ function Invoke-TaskWithMonitoring {
                 Write-EnhancedLog "  Status: $currentStatus" -ForegroundColor Gray
             }
             else {
-                Write-EnhancedLog "  Could not retrieve status, continuing to poll..." -ForegroundColor Yellow
+                Write-EnhancedLog "  Could not retrieve status..." -ForegroundColor Yellow
             }
         } until ($taskStatus.General.Status -eq "Waiting" -or $taskStatus.General.Status -eq "Failed")
         
         if ($taskStatus.General.Status -eq "Waiting") {
-            Write-EnhancedLog "Task '$TaskID' completed successfully." -ForegroundColor Green
+            Write-EnhancedLog "Task '$TaskID' completed." -ForegroundColor Green
             return $true
         }
         else {

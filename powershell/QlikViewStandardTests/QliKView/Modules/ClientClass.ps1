@@ -20,6 +20,7 @@ class QMSClient {
         $ns = Get-XmlNamespace -iface $this.InterfaceVersion
 
         $client = New-Object System.Net.WebClient
+        $client.Encoding = [System.Text.Encoding]::UTF8
         $client.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
         $client.Headers.Add("Content-Type", "text/xml; charset=utf-8")
         $client.Headers.Add("SOAPAction", "`"$soapAction`"")
@@ -39,7 +40,11 @@ class QMSClient {
 </soap:Envelope>
 "@
         try {
-            $response = $client.UploadString($this.BaseUrl, "POST", $envelope)
+            $utf8 = [System.Text.Encoding]::UTF8
+            $envelopeBytes = $utf8.GetBytes($envelope)
+            $responseBytes = $client.UploadData($this.BaseUrl, "POST", $envelopeBytes)
+            $response = $utf8.GetString($responseBytes)
+            
             return [xml]$response
         }
         catch [System.Net.WebException] {
@@ -59,7 +64,7 @@ class QMSClient {
     }
 
     <# InvokeMethod
-     Returns the result element directly (Envelope.Body.FirstChild.FirstChild) (fits around 80% of api calls)
+     Returns the result element (Envelope.Body.FirstChild.FirstChild) (fits around 80% of api calls)
      Set returnFullResponse=$true for full envelope
     #>
     [object] InvokeMethod([string]$methodName, [hashtable]$parameters) {

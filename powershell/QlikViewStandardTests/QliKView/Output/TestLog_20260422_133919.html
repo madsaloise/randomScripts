@@ -1,0 +1,309 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PowerShell Log - 2026-04-22 13:39:19</title>
+    <style>
+        body { background-color: #012456; font-family: 'Consolas', 'Courier New', monospace; font-size: 14px; padding: 20px; }
+        pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+<pre>
+<span style='color: #00FFFF;'>Importing module: ADDirectories.psm1</span>
+<span style='color: #00FFFF;'>Importing module: AssignedUsers.psm1</span>
+<span style='color: #00FFFF;'>Importing module: Get-ServerObjects.psm1</span>
+<span style='color: #00FFFF;'>Importing module: OpenQVDesktopFiles.psm1</span>
+<span style='color: #00FFFF;'>Importing module: QDSTasks.psm1</span>
+<span style='color: #00FFFF;'>Importing module: QMCModules.psm1</span>
+<span style='color: #00FFFF;'>Importing module: ServiceSettings.psm1</span>
+<span style='color: #00FFFF;'>Importing module: ServiceStatus.psm1</span>
+<span style='color: #00FFFF;'>Importing module: Start-SchedulerTask.psm1</span>
+<span style='color: #00FFFF;'>Importing module: TaskInfo.psm1</span>
+<span style='color: #FFFFFF;'>Connected using IQMS9. Service key: yJ5+DEgdL82Deflea1C3vBmwQ8M6dh58</span>
+<span style='color: #00FFFF;'>Testing a ping against the QMC</span>
+<span style='color: #00FF00;'>Ping: Success</span>
+<span style='color: #00FFFF;'>Retrieving all services</span>
+<span style='color: #00FFFF;'>Service Statuses</span>
+<span style='color: #FFFFFF;'> - QDS@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>      * Type: QlikViewDistributionService - Host: jmra-qlikv-t-01 - Status: OK - Running</span>
+<span style='color: #FFFFFF;'> - QVS@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>      * Type: QlikViewServer - Host: jmra-qlikv-t-01 - Status: OK - Running</span>
+<span style='color: #FFFFFF;'> - QVWS@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>      * Type: QlikViewWebServer - Host: jmra-qlikv-t-01 - Status: OK - Running</span>
+<span style='color: #FFFFFF;'> - DSC@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>      * Type: QlikViewDirectoryServiceConnector - Host: jmra-qlikv-t-01 - Status: OK - Running</span>
+<span style='color: #FFFFFF;'> - LicenseService@JMRA-QLIKV-T-01</span>
+<span style='color: #FFFFFF;'>      * Type: LicenseService - Host: jmra-qlikv-t-01 - Status: OK - Running</span>
+<span style='color: #FFFFFF;'> - QMS@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>      * Type: QlikViewManagementService - Host: jmra-qlikv-t-01 - Status: OK - </span>
+<span style='color: #00FFFF;'>Retrieving License Server Status</span>
+<span style='color: #FFFFFF;'>Status: Ok</span>
+<span style='color: #00FFFF;'>Retrieving Signed Key License validity</span>
+<span style='color: #00FF00;'>License overview:</span>
+<span style='color: #00FF00;'>  From: 2024-06-27</span>
+<span style='color: #00FF00;'>  To:   2027-06-28</span>
+<span style='color: #00FFFF;'>
+Retrieving AD directories and assigned users</span>
+<span style='color: #00FFFF;'>Active Directory Configuration</span>
+<span style='color: #FFFFFF;'>AD Provider found: Active Directory</span>
+<span style='color: #FFFFFF;'>Available directories: LDAP://SITAD.DK</span>
+<span style='color: #00FF00;'>AD directory found: LDAP://SITAD.DK</span>
+<span style='color: #00FFFF;'>
+Retrieving Assigned Users...</span>
+<span style='color: #00FF00;'>
+=== License Assignment Summary ===</span>
+<span style='color: #00FF00;'>Total Assigned Users: 11</span>
+<span style='color: #00FFFF;'>  Professional: 11</span>
+<span style='color: #00FFFF;'>  Analyzer:     0</span>
+<span style='color: #FFFFFF;'></span>
+<span style='color: #00FFFF;'>
+Retrieving QDS tasks</span>
+<span style='color: #00FFFF;'>QlikView Distribution Services &amp; Tasks</span>
+<span style='color: #FFFFFF;'> - QDS@jmra-qlikv-t-01 (ID: 18c66860-131b-4a90-b1e6-ac68432cfec1)</span>
+<span style='color: #00FF00;'>Found 300 tasks</span>
+<span style='color: #00FFFF;'>
+Retrieving service settings</span>
+<span style='color: #00FFFF;'>
+Retrieving settings for QlikViewDistributionService</span>
+<span style='color: #FFFFFF;'>
+
+Advanced_CPUAffinity                                                                 : 
+Advanced_CPUPriority                                                                 : High
+Advanced_MaxCloudDist                                                                : 5
+Advanced_MaxQvbAdmin                                                                 : 20
+Advanced_MaxQvbDist                                                                  : 4
+Advanced_PreLoadDocAdminInterval                                                     : 24
+Advanced_PreLoadDocAdminSchedule                                                     : Never
+Advanced_PreLoadDocAdminTime                                                         : 0001-01-01T00:00:00
+Advanced_SectionAccessPassword                                                       : 
+Advanced_SectionAccessUsername                                                       : 
+Email_AlertHtmlBody                                                                  : The task &quot;[TaskName]&quot; failed.
+Email_AlertHtmlSubject                                                               : QlikView Publisher: The task &quot;[TaskName]&quot; failed
+Email_AlertMailAddresses                                                             : 
+Email_AlertPlainBody                                                                 : The task &quot;[TaskName]&quot; failed.
+Email_AlertPlainSubject                                                              : QlikView Publisher: The task &quot;[TaskName]&quot; failed
+Email_AttachmentHtmlBody                                                             : Your document &quot;[DocTitle]&quot; has been distributed by QlikView Publisher. The document is attached to this message.&lt;br&gt;
+                                                                                       &lt;br&gt;
+                                                                                       Time: [DateTime]&lt;br&gt;
+Email_AttachmentHtmlSubject                                                          : QlikView Publisher: [DocTitle] is attached to this message
+Email_AttachmentPlainBody                                                            : Your document &quot;[DocTitle]&quot; has been distributed by QlikView Publisher. The document is attached to this message.
+                                                                                       
+                                                                                       Time: [DateTime]
+Email_AttachmentPlainSubject                                                         : QlikView Publisher: [DocTitle] is attached to this message
+Email_IncludeWarnings                                                                : false
+Email_NotifyHtmlBody                                                                 : Your document &amp;quot;[DocTitle]&amp;quot; has been distributed by QlikView Publisher.&lt;br/&gt;
+                                                                                       &lt;br/&gt;
+                                                                                       Location: &lt;a href=&quot;[Location]&quot;&gt;[Location]&lt;/a&gt;&lt;br/&gt;
+                                                                                       Time: [DateTime]
+Email_NotifyHtmlSubject                                                              : QlikView Publisher: [DocTitle] has been distributed
+Email_NotifyPlainBody                                                                : Your document &quot;[DocTitle]&quot; has been distributed by QlikView Publisher.
+                                                                                       Location: [Location]
+                                                                                       
+                                                                                       Time: [DateTime]
+Email_NotifyPlainSubject                                                             : QlikView Publisher: [DocTitle] has been distributed
+General_ApplicationDataFolder                                                        : C:\ProgramData\QlikTech\DistributionService
+General_ClusterInfo_QDSSettings.QDSClusterInfo_DedicatedQvbDist                      : 0
+General_ClusterInfo_QDSSettings.QDSClusterInfo_DedicatedTaskGraceTimeMinutes         : 0
+General_ClusterInfo_QDSSettings.QDSClusterInfo_DedicatedTaskRunAlone                 : false
+General_ClusterInfo_QDSSettings.QDSClusterInfo_DistributionGroups                    : 
+General_ClusterInfo_QDSSettings.QDSClusterInfo_MaxCloudDist                          : 5
+General_ClusterInfo_QDSSettings.QDSClusterInfo_MaxQvbAdmin                           : 20
+General_ClusterInfo_QDSSettings.QDSClusterInfo_MaxQvbDist                            : 4
+General_ClusterInfo_QDSSettings.QDSClusterInfo_Url                                   : http://jmra-qlikv-t-01:4720/QDS/Service
+General_ClusterName                                                                  : QDS@jmra-qlikv-t-01
+General_DisableTaskTriggersForDocAdmins                                              : false
+General_LogLevel                                                                     : Normal
+General_SelectedDscID                                                                : 1706582b-62e9-4f1a-aa20-debf97da656f
+General_SelectedPDFPrinter                                                           : 
+General_ShowAlerts                                                                   : true
+General_SourceFolders_DocumentFolder_Administrators                                  : 
+General_SourceFolders_DocumentFolder_General_Path                                    : F:\QVTEST
+General_SourceFolders_DocumentFolder_General_SendAlertEmailForDocumentAdministrators : false
+General_SourceFolders_DocumentFolder_General_Type                                    : Source
+General_SourceFolders_DocumentFolder_ID                                              : 4af4420c-8554-41f0-aa52-555e640546cb
+General_SourceFolders_DocumentFolder_Scope                                           : General
+General_SourceFolders_DocumentFolder_Services                                        : 
+ID                                                                                   : 18c66860-131b-4a90-b1e6-ac68432cfec1
+Login_Password                                                                       : 
+Login_Username                                                                       : 
+Scope                                                                                : All
+
+
+
+</span>
+<span style='color: #00FFFF;'>
+Retrieving settings for QlikViewDirectoryServiceConnector</span>
+<span style='color: #FFFFFF;'>
+
+AllUrls_anyURI : http://jmra-qlikv-t-01:4730/DSC/Service
+Id             : 1706582b-62e9-4f1a-aa20-debf97da656f
+Name           : DSC@jmra-qlikv-t-01
+
+
+
+</span>
+<span style='color: #00FFFF;'>
+Retrieving settings for QlikViewServer</span>
+<span style='color: #FFFFFF;'>
+
+Cluster_AlternateBuildNumber                               : -1
+Cluster_AlternateDocumentRootFolder                        : 
+Cluster_License_AllowsClustering                           : true
+Cluster_License_ControlNumber                              : 
+Cluster_License_SerialNumber                               : 1234 5259 6901 9613
+Cluster_Members_QVSClusterMember_Address                   : qvp://jmra-qlikv-t-01/
+Cluster_Members_QVSClusterMember_ExternalMachineName       : 
+Cluster_Members_QVSClusterMember_ID                        : 362d90d2-5304-4988-b131-0527fedd5678
+Distribution_Accounts                                      : 
+Distribution_IsPublisherQDS                                : true
+Distribution_QDSID                                         : 18c66860-131b-4a90-b1e6-ac68432cfec1
+Documents_Objects_AllowMoveObjects                         : true
+Documents_Objects_DefaultLabelOthers                       : Others
+Documents_Objects_DefaultLabelTotal                        : Total
+Documents_Server_AllowAnonymousServerBookmarkCollaboration : false
+Documents_Server_AllowDocumentDownload                     : true
+Documents_Server_AllowDocumentUpload                       : true
+Documents_Server_AllowPrintAndExport                       : true
+Documents_Server_AllowServerAnnotations                    : true
+Documents_Server_AllowServerCollaboration                  : true
+Documents_Server_AllowSessionCollaboration                 : false
+Documents_Server_OverlayDocuments                          : true
+Documents_Server_ProhibitQVPXSessionRecovery               : false
+Documents_Server_Timeout                                   : 480
+Folders_System_ExportTemporaryFolder                       : 
+Folders_UserDocumentAdministrators                         : 
+Folders_UserDocumentMounts                                 : 
+Folders_UserDocumentRootFolder                             : F:\AccessPoint
+General_Name                                               : QVS@jmra-qlikv-t-01
+General_Password                                           : 
+General_ShowAlerts                                         : true
+General_UserName                                           : 
+Logging_FileSplitMode                                      : Daily
+Logging_Folder                                             : f:\log
+Logging_Level_EnableEventLogging                           : true
+Logging_Level_EnablePerformanceLogging                     : true
+Logging_Level_EnableSessionLogging                         : true
+Logging_Level_PerformanceLoggingInterval                   : 5
+Logging_SystemLogVerbosity                                 : High
+Performance_CPU_Affinity_boolean                           : true
+Performance_CPU_Throttle                                   : 0
+Performance_Document_AllowDocumentAutoLoad                 : true
+Performance_Document_MaxChartSymbols                       : 100
+Performance_Document_ObjectCalculationTimeLimit            : 60
+Performance_Sessions_ConcurrentSessionsTimeout             : 1800
+Performance_Sessions_MaxConcurrentSessions                 : 5000
+Performance_Sessions_MaxInactiveSessionTime                : 1800
+Performance_Sessions_MaxTotalSessionTime                   : 0
+Performance_WorkingSetMemory_HighLimit                     : 90
+Performance_WorkingSetMemory_LowLimit                      : 70
+QVSID                                                      : de6e8fc8-e348-4045-bcc0-cb24607b934e
+Scope                                                      : All
+Security_AllowAlternateAdmin                               : false
+Security_AllowDynamicUpdate                                : false
+Security_AllowExtensions                                   : true
+Security_AllowServerMacroExecution                         : true
+Security_AllowServerSystemAccessMacroExecution             : false
+Security_Authentication_Level                              : AllowAnonymous
+Security_Authentication_UseDomainAccountForAnonymous       : false
+Security_Authorization_UseDMSAuthorization                 : false
+Security_CompressNetworkTraffic                            : true
+Security_EnableAuditLogging                                : Detail
+Security_EnableHTTPPush                                    : false
+Security_ExtensionsFolder                                  : 
+
+
+
+</span>
+<span style='color: #00FFFF;'>
+Retrieving settings for QlikViewWebServer</span>
+<span style='color: #FFFFFF;'>
+
+AccessPointQvsConnection_ServiceInfo_Address          : qvp://jmra-qlikv-t-01/
+AccessPointQvsConnection_ServiceInfo_ClusterNodeCount : 1
+AccessPointQvsConnection_ServiceInfo_ID               : de6e8fc8-e348-4045-bcc0-cb24607b934e
+AccessPointQvsConnection_ServiceInfo_Name             : QVS@jmra-qlikv-t-01
+AccessPointQvsConnection_ServiceInfo_Type             : QlikViewServer
+DSC_ServiceInfo_Address                               : http://jmra-qlikv-t-01:4730/DSC/Service
+DSC_ServiceInfo_ClusterNodeCount                      : 1
+DSC_ServiceInfo_ID                                    : 1706582b-62e9-4f1a-aa20-debf97da656f
+DSC_ServiceInfo_Name                                  : DSC@jmra-qlikv-t-01
+DSC_ServiceInfo_Type                                  : QlikViewDirectoryServiceConnector
+DefaultQvs                                            : QVS@jmra-qlikv-t-01
+HeaderName                                            : 
+LoginAddress                                          : /qlikview/login.htm
+Port                                                  : 443
+Prefix                                                : 
+QvWsAuthenticationType                                : Ntlm
+QvWsLogginLevel                                       : Information
+QvWsLoginType                                         : Default
+ServerName                                            : QVWS@jmra-qlikv-t-01
+UseHttps                                              : true
+
+
+
+</span>
+<span style='color: #00FFFF;'>
+Retrieving settings for QVPR</span>
+<span style='color: #FFFFFF;'>
+
+ConnectUsingWindowsAuthentication : false
+ConnectionModel                   : DefaultMethod
+Database                          : QVPR
+MaxPoolSize                       : 0
+Password                          : 
+Port                              : 1433
+Provider                          : Xml
+Server                            : 
+UserName                          : 
+XmlBackupInterval                 : 1
+XmlBackupPath                     : 
+XmlBackupSchedule                 : Daily
+XmlBackupTime                     : 0001-01-01T00:00:00
+XmlBasePath                       : 
+
+
+
+</span>
+<span style='color: #00FFFF;'>Finding task ID for: Reload of SA\10_LOAD\10_SA_BUDGETID.qvw</span>
+<span style='color: #00FF00;'>Task: Reload of SA\10_LOAD\10_SA_BUDGETID.qvw</span>
+<span style='color: #FFFFFF;'>  ID: f6e7d550-e674-4c71-a9fb-bf7ea89a420a</span>
+<span style='color: #FFFFFF;'>  QDS: QDS@jmra-qlikv-t-01</span>
+<span style='color: #FFFFFF;'>  Enabled: true</span>
+<span style='color: #00FFFF;'>Running task: &#39;f6e7d550-e674-4c71-a9fb-bf7ea89a420a&#39;...</span>
+<span style='color: #00FF00;'>Task started..</span>
+<span style='color: #C0C0C0;'>  Status: Waiting</span>
+<span style='color: #00FF00;'>Task &#39;f6e7d550-e674-4c71-a9fb-bf7ea89a420a&#39; completed.</span>
+<span style='color: #00FF00;'>
+Task completed successfully</span>
+<span style='color: #00FFFF;'>
+Checking server objects</span>
+<span style='color: #00FFFF;'>Retrieving QlikView Server service...</span>
+<span style='color: #00FF00;'>Found QlikView Server: QVS@jmra-qlikv-t-01 (ID: de6e8fc8-e348-4045-bcc0-cb24607b934e)</span>
+<span style='color: #00FFFF;'>Retrieving user documents...</span>
+<span style='color: #00FF00;'>Found 87 documents</span>
+<span style='color: #00FFFF;'>Retrieving server objects from documents...</span>
+<span style='color: #00FFFF;'>
+Total server objects found: 20</span>
+<span style='color: #00FF00;'>Unique object types found: ListBox (17), Bookmark (1), Chart (1), Sheet (1)</span>
+<span style='color: #00FFFF;'>
+Testing QlikView Desktop connectivity to accesspoint</span>
+<span style='color: #00FFFF;'>Opening document: qvp://qlikview-t.anklagemyndigheden.net/Opslagstabeller.qvw</span>
+<span style='color: #00FF00;'>Document opened</span>
+<span style='color: #FFFF00;'>Looks good?</span>
+<span style='color: #00FF00;'>QlikView desktop closed.</span>
+<span style='color: #00FF00;'>Everything checked serverside</span>
+<span style='color: #00FF00;'>====================================================== 
+</span>
+<span style='color: #00FFFF;'>Secondary functions testing begins</span>
+<span style='color: #00FFFF;'>Testing file share access..</span>
+<span style='color: #00FF00;'>Fileshare \\jmra-qlikv-t-01\/QVTEST can be opened</span>
+<span style='color: #00FFFF;'>Testing if scheduler task can be started. 
+Task: Distribuer QlikView Hotfix.</span>
+<span style='color: #00FF00;'>Distribuer QlikView Hotfix started!</span>
+<span style='color: #00FFFF;'>Polling for task completion...</span>
+<span style='color: #00FFFF;'>Checking task status at 2 seconds...</span>
+<span style='color: #00FF00;'>Task completed at 04/22/2026 13:39:56</span>
+</pre>
+</body>
+</html>

@@ -8,9 +8,9 @@ Function Start-QVWDesktop {
         $qlikView = New-Object -ComObject "QlikTech.QlikView"
         $qvProcess = Get-Process -Name "Qv" -ErrorAction SilentlyContinue
         if (-not $qvProcess) {
-            Write-EnhancedLog "Starting QlikView Desktop..." -ForegroundColor Cyan
+            Write-EnhancedLog "Starting QlikView.." -ForegroundColor Cyan
             Start-Process "Qv.exe" -WindowStyle Normal
-            Start-Sleep -Seconds 3  # Give it time to start
+            Start-Sleep -Seconds 3  # Venter på at QlikView starter
         }
         Write-EnhancedLog "Opening document: $documentPath" -ForegroundColor Cyan
         $document = $qlikView.OpenDoc($documentPath, "", "", $false)
@@ -20,7 +20,7 @@ Function Start-QVWDesktop {
                 Write-EnhancedLog "Reloading document..." -ForegroundColor Cyan
                 $document.Reload($true, $false, $false)
             }
-            Write-EnhancedLog "Document opened successfully" -ForegroundColor Green
+            Write-EnhancedLog "Document opened" -ForegroundColor Green
         }
         else {
             Write-EnhancedLog "Failed to open document" -ForegroundColor Red
@@ -54,7 +54,7 @@ Function Close-QVWDesktop {
             [System.Runtime.Interopservices.Marshal]::ReleaseComObject($QVSession.QlikView) | Out-Null
         }
         
-        Write-EnhancedLog "QlikView desktop process closed." -ForegroundColor Green
+        Write-EnhancedLog "QlikView desktop closed." -ForegroundColor Green
     }
     catch {
         Write-Warning "Error closing QlikView: $_"
