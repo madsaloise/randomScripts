@@ -7,9 +7,36 @@ $__varsBefore = Get-Variable | Select-Object -ExpandProperty Name
 $__envBefore     = Get-ChildItem Env: | Select-Object -ExpandProperty Name
 
 <# INSERT VARIABLES HERE #>
-
+#example
 $ThisIsAVariable = "This variable is made in the profile!"
 $Env:ThisIsAnEnvVariable = "This env variable is made in the profile!"
+
+#used for other scripts, so they can be used without hardcoding them in the scripts, and they can be easily updated here if needed
+$qmcHostTest = ""
+$qmcHostProd = ""
+$accessPointTest = ""
+$accessPointProd = ""
+
+$senseHubTest = ""
+$senseTestAppID = ""
+
+$dwhTest = ""
+$dwhStaging = ""
+$dwhProd = ""
+$schedulerUri = ""
+
+$managementFileShare = ""
+$qlikTestFileShare = ""
+$qlikProdFileShare = ""
+
+$emailMCH = ""
+$emailQlikView = ""
+$emailAnalyse = ""
+$emailIndkoeb = ""
+$env:System_TeamFoundationServerUri = ""
+$env:System_TeamProject            = [System.Uri]::EscapeDataString("")
+$pat = $env:System_AccessToken     = ""
+$env:System_DefaultWorkingDirectory = (Get-Location).Path
 
 <# VARIABLES END#>
 
