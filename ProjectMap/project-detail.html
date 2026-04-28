@@ -270,7 +270,8 @@
                 rect.setAttribute('width', nodeWidth);
                 rect.setAttribute('height', nodeHeight);
                 rect.setAttribute('rx', 8);
-                rect.setAttribute('fill', isCurrent ? project.categoryColor || '#667eea' : '#e9ecef');
+                const categoryColor = categories[project.category]?.color || '#667eea';
+                rect.setAttribute('fill', isCurrent ? categoryColor : '#e9ecef');
                 rect.setAttribute('stroke', isCurrent ? '#333' : '#999');
                 rect.setAttribute('stroke-width', isCurrent ? 3 : 1.5);
                 group.appendChild(rect);
@@ -391,16 +392,15 @@
             // Set page metadata
             document.title = project.title;
             
-            // Set accent color
-            if (project.categoryColor) {
-                document.documentElement.style.setProperty('--accent-color', project.categoryColor);
-            }
+            // Set accent color from category
+            const categoryColor = categories[project.category]?.color || '#667eea';
+            document.documentElement.style.setProperty('--accent-color', categoryColor);
 
             // Build content HTML
             let html = `<h1>${project.title}</h1>`;
             
             // Category badge
-            html += `<div class="category-badge" style="background: ${project.categoryColor || '#667eea'}">${project.category}</div>`;
+            html += `<div class="category-badge" style="background: ${categoryColor}">${project.category}</div>`;
             
             // Overview
             if (project.overview) {

@@ -4,7 +4,6 @@ const qlikviewProjects = {
         title: "QlikView Engine",
         name: "QlikView Engine",
         category: "QlikView",
-        categoryColor: "#00BCD4",
         languages: ["PowerShell", "Qlik"],
         shortDescription: "QlikView client libraries and automation",
         overview: "PowerShell class-based client library for QlikView automation. Provides programmatic access to QlikView Desktop for opening, reloading, and saving QVW files. Used across multiple automation projects.",

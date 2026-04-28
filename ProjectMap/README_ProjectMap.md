@@ -109,60 +109,32 @@ Changes automatically propagate to:
 Simply edit the HTML file in `ProjectData/` - the content section is independent of metadata.
 
 ### Adding a New Project
-1. **Add to `data.js`:**
+1. **Add to appropriate category file** (e.g., `ProjectData/warehouse.js`, `ProjectData/qlikview.js`, etc.):
    ```javascript
    "new-project": {
-       id: "new-project",
        title: "New Project",
        name: "New Project",
        category: "Warehouse",
-       categoryColor: "#9C27B0",
-       breadcrumb: "Warehouse / New Project",
-       shortDescription: "Description for map",
+       languages: ["SQL", "PowerShell"],
+       shortDescription: "Brief description for list view",
+       overview: "Detailed overview of the project",
        location: ["NewProject/"],
-       detailUrl: "ProjectData/new-project.html",
-       dependencies: [],
-       integrations: []
+       dependencies: ["other-project-key"],
+       integrations: ["integrated-project-key"],
+       requirements: [
+           "Requirement 1",
+           "Requirement 2"
+       ],
+       contactSupport: [
+           "Contact Person",
+           "Documentation link"
+       ]
    }
    ```
 
-2. **Create HTML file** in `ProjectData/new-project.html`:
-   ```html
-   <!DOCTYPE html>
-   <html lang="en">
-   <head>
-       <meta charset="UTF-8">
-       <title>New Project</title>
-       <link rel="stylesheet" href="../styles.css">
-       <style>
-           :root {
-               --accent-color: var(--color-warehouse);
-           }
-       </style>
-   </head>
-   <body data-project-id="new-project">
-       <div class="nav-header">
-           <a href="../portfolio.html">&larr; Back to Portfolio Map</a>
-           <div class="breadcrumb" id="breadcrumb">Loading...</div>
-       </div>
-       
-       <script src="../data.js"></script>
-       <script>
-           const projectId = document.body.getAttribute('data-project-id');
-           const project = getProject(projectId);
-           if (project) {
-               document.getElementById('breadcrumb').innerHTML = 
-                   `ProjectMap<span>/</span>${project.breadcrumb.replace(' / ', '<span>/</span>')}`;
-               document.title = project.title;
-               document.documentElement.style.setProperty('--accent-color', project.categoryColor);
-           }
-       </script>
-       
-       <h1>New Project</h1>
-       <!-- Your content here -->
-   </body>
-   </html>
-   ```
+2. **No HTML file needed** - All projects use the dynamic `project-detail.html` page with URL parameters (e.g., `project-detail.html?project=new-project`)
+
+3. **Color is inherited** from the category definition in `data.js` - no need to specify per-project
 
 3. **Update `index.html`** to add link in appropriate category
 

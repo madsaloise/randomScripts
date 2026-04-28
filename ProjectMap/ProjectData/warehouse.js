@@ -35,7 +35,6 @@ const warehouseProjects = {
         title: "SQL to QlikView Converter",
         name: "SQL to QV Converter",
         category: "Warehouse",
-        categoryColor: "#9C27B0",
         languages: ["PowerShell", "SQL", "Qlik"],
         shortDescription: "Convert SQL queries to QlikView script and create PRs",
         overview: "PowerShell tool for converting SQL queries into QlikView script format and automatically creating pull requests in Azure DevOps. Streamlines the process of migrating warehouse queries to QlikView applications.",

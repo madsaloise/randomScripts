@@ -183,6 +183,23 @@
             color: #999;
             font-family: 'Consolas', monospace;
         }
+
+        .language-subsection {
+            margin-bottom: 20px;
+        }
+
+        .language-subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .language-heading {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -219,6 +236,7 @@
                 <button class="filter-btn language-filter" data-filter-type="language" data-filter="C#">C#</button>
                 <button class="filter-btn language-filter" data-filter-type="language" data-filter="Python">Python</button>
                 <button class="filter-btn language-filter" data-filter-type="language" data-filter="JavaScript">JavaScript</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="Excel">Excel</button>
                 </div>
             </div>
         </div>
@@ -285,25 +303,78 @@
                             <span class="category-icon">${cat.icon}</span>
                             <h3 style="color: ${cat.color}">${cat.displayName}</h3>
                         </div>
-                        <div class="project-grid">
                 `;
 
-                cat.projects.forEach(project => {
-                    html += `
-                        <div class="project-card" style="border-left-color: ${cat.color}" 
-                             data-project-id="${project.id}"
-                             onclick="window.location.href='project-detail.html?project=${project.id}'">
-                            <h4>${project.name}</h4>
-                            <p>${project.shortDescription}</p>
-                            ${project.location && project.location.length > 0 
-                                ? `<div class="location">${project.location[0]}</div>` 
-                                : ''}
-                        </div>
-                    `;
-                });
+                // Special handling for "other tools" - group by language
+                if (catKey === 'other tools') {
+                    // Group projects by language
+                    const languageGroups = {};
+                    cat.projects.forEach(project => {
+                        if (project.languages && project.languages.length > 0) {
+                            project.languages.forEach(lang => {
+                                if (!languageGroups[lang]) {
+                                    languageGroups[lang] = [];
+                                }
+                                languageGroups[lang].push(project);
+                            });
+                        } else {
+                            // Projects without languages go to "Other"
+                            if (!languageGroups['Other']) {
+                                languageGroups['Other'] = [];
+                            }
+                            languageGroups['Other'].push(project);
+                        }
+                    });
+
+                    // Render each language subsection
+                    Object.keys(languageGroups).sort().forEach(language => {
+                        html += `
+                            <div class="language-subsection">
+                                <div class="language-heading">${language}</div>
+                                <div class="project-grid">
+                        `;
+
+                        languageGroups[language].forEach(project => {
+                            html += `
+                                <div class="project-card" style="border-left-color: ${cat.color}" 
+                                     data-project-id="${project.id}"
+                                     onclick="window.location.href='project-detail.html?project=${project.id}'">
+                                    <h4>${project.name}</h4>
+                                    <p>${project.shortDescription}</p>
+                                    ${project.location && project.location.length > 0 
+                                        ? `<div class="location">${project.location[0]}</div>` 
+                                        : ''}
+                                </div>
+                            `;
+                        });
+
+                        html += `
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // Normal rendering for other categories
+                    html += `<div class="project-grid">`;
+
+                    cat.projects.forEach(project => {
+                        html += `
+                            <div class="project-card" style="border-left-color: ${cat.color}" 
+                                 data-project-id="${project.id}"
+                                 onclick="window.location.href='project-detail.html?project=${project.id}'">
+                                <h4>${project.name}</h4>
+                                <p>${project.shortDescription}</p>
+                                ${project.location && project.location.length > 0 
+                                    ? `<div class="location">${project.location[0]}</div>` 
+                                    : ''}
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+                }
 
                 html += `
-                        </div>
                     </div>
                 `;
             });
@@ -363,6 +434,14 @@
                     } else {
                         card.style.display = 'none';
                     }
+                });
+                
+                // Handle language subsections (for "other tools" category)
+                const languageSubsections = section.querySelectorAll('.language-subsection');
+                languageSubsections.forEach(subsection => {
+                    const visibleCards = subsection.querySelectorAll('.project-card[style*="display: block"], .project-card:not([style*="display: none"])');
+                    const hasVisible = Array.from(visibleCards).some(card => card.style.display !== 'none');
+                    subsection.style.display = hasVisible ? 'block' : 'none';
                 });
                 
                 // Hide category section if no projects are visible
