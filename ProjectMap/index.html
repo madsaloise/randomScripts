@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectMap - Technical Documentation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --accent-color: #2196F3;
+        }
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            margin: -20px -20px 40px -20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            border: none;
+        }
+        .hero p {
+            font-size: 1.2em;
+            color: #546e7a;
+        }
+        .btn-primary {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 15px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover {
+            background: #1976D2;
+            text-decoration: none;
+        }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .category-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .category-card h3 {
+            margin-top: 0;
+        }
+        .category-card ul {
+            padding-left: 20px;
+        }
+        .category-warehouse { border-left-color: #9C27B0; }
+        .category-qliksense { border-left-color: #2196F3; }
+        .category-qlikview { border-left-color: #00BCD4; }
+        .category-automation { border-left-color: #FF9800; }
+        .category-tools { border-left-color: #4CAF50; }
+        .category-devops { border-left-color: #607D8B; }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>📊 ProjectMap</h1>
+        <p>Interactive Technical Documentation & Project Portfolio</p>
+        <a href="portfolio.html" class="btn-primary">🗺️ Open Interactive Map</a>
+    </div>
+
+    <h2>Documentation Categories</h2>
+    
+    <div class="category-grid" id="category-grid">
+        <!-- Categories dynamically generated from data.js -->
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Group projects by category
+        const projectsByCategory = {};
+        Object.values(projectData).forEach(project => {
+            if (!projectsByCategory[project.category]) {
+                projectsByCategory[project.category] = [];
+            }
+            projectsByCategory[project.category].push(project);
+        });
+
+        // Generate category cards
+        const grid = document.getElementById('category-grid');
+        Object.entries(categories).forEach(([categoryKey, categoryInfo]) => {
+            const projects = projectsByCategory[categoryKey] || [];
+            if (projects.length === 0) return; // Skip empty categories
+
+            const categoryClass = categoryKey.toLowerCase().replace(/ /g, '');
+            const card = document.createElement('div');
+            card.className = `category-card category-${categoryClass}`;
+            
+            const projectLinks = projects
+                .map(p => `<li><a href="project-detail.html?project=${p.id}">${p.name}</a></li>`)
+                .join('');
+            
+            card.innerHTML = `
+                <h3>${categoryInfo.icon} ${categoryInfo.displayName}</h3>
+                <ul>
+                    ${projectLinks}
+                </ul>
+            `;
+            
+            grid.appendChild(card);
+        });
+    </script>
+
+    <h2>Quick Start</h2>
+    <ol>
+        <li><strong>Interactive Map:</strong> Open <a href="portfolio.html">portfolio.html</a> to explore the project dependency graph (toggle between Map and List views)</li>
+        <li><strong>Browse Projects:</strong> Click any category above or any project in the map to view detailed documentation</li>
+        <li><strong>Navigate Between Projects:</strong> Click dependencies/dependants to seamlessly jump between related projects</li>
+        <li><strong>File Share Compatible:</strong> All pages work without a web server - perfect for network shares</li>
+    </ol>
+
+    <h2>Features</h2>
+    <ul>
+        <li>✅ Dual view modes: Interactive Map & Organized List</li>
+        <li>✅ Dynamic project detail pages (single source of truth)</li>
+        <li>✅ Clickable lineage visualization with dependency graphs</li>
+        <li>✅ Color-coded categories for easy navigation</li>
+        <li>✅ Cross-linked documentation with seamless navigation</li>
+        <li>✅ Works on file:// URLs (no server needed)</li>
+        <li>✅ Responsive design for all screen sizes</li>
+    </ul>
+
+    <footer style="margin-top: 60px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #78909c; text-align: center;">
+        <p>ProjectMap Documentation - Last updated April 2026</p>
+    </footer>
+</body>
+</html>

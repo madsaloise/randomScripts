@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --accent-color: #667eea;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .nav-header {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-header a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-header a:hover {
+            color: #764ba2;
+        }
+
+        .breadcrumb {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #999;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            background: var(--accent-color);
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent-color);
+        }
+
+        .overview {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        ul li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #d63384;
+        }
+
+        pre {
+            background: #f8f9fa;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Lineage Visualization */
+        .lineage-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .lineage-svg {
+            width: 100%;
+            min-height: 150px;
+        }
+
+        .lineage-title {
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        /* Clickable project links */
+        .project-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .project-link:hover {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+        }
+
+        .dependency-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.2s;
+        }
+
+        .dependency-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .dependency-item .project-link {
+            font-size: 1.05em;
+        }
+
+        .dependency-item .description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state h2 {
+            border: none;
+            color: #999;
+        }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-header">
+        <a href="portfolio.html">&larr; Back to Portfolio Map</a>
+        <div class="breadcrumb" id="breadcrumb">Loading...</div>
+    </div>
+    
+    <div class="container" id="main-container">
+        <div class="loading">Loading project details...</div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // Get project ID from URL parameter
+        function getProjectIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectParam = urlParams.get('project') || urlParams.get('id');
+            
+            // Also support hash-based routing (e.g., #dwh-core)
+            const hash = window.location.hash.replace('#', '');
+            
+            return projectParam || hash || null;
+        }
+
+        // Navigate to another project
+        function navigateToProject(projectId) {
+            window.location.href = `project-detail.html?project=${projectId}`;
+        }
+
+        // Create lineage visualization
+        function createLineageVisualization(project) {
+            const container = document.createElement('div');
+            container.className = 'lineage-container';
+            
+            const title = document.createElement('div');
+            title.className = 'lineage-title';
+            title.textContent = 'PROJECT LINEAGE';
+            container.appendChild(title);
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('class', 'lineage-svg');
+            
+            // Calculate layout
+            const nodeWidth = 160;
+            const nodeHeight = 60;
+            const horizontalGap = 80;
+            const verticalGap = 40;
+            
+            const dependencies = project.dependencies || [];
+            const dependants = project.dependants || [];
+            
+            const maxDeps = Math.max(dependencies.length, dependants.length, 1);
+            const totalWidth = nodeWidth * 3 + horizontalGap * 2;
+            const totalHeight = Math.max(nodeHeight * maxDeps + verticalGap * (maxDeps - 1), nodeHeight * 3);
+            
+            svg.setAttribute('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+            svg.setAttribute('height', Math.min(totalHeight, 300));
+
+            // Helper to create a node
+            function createNode(x, y, text, projectId, isCurrent = false) {
+                const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                group.style.cursor = isCurrent ? 'default' : 'pointer';
+                
+                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                rect.setAttribute('x', x);
+                rect.setAttribute('y', y);
+                rect.setAttribute('width', nodeWidth);
+                rect.setAttribute('height', nodeHeight);
+                rect.setAttribute('rx', 8);
+                rect.setAttribute('fill', isCurrent ? project.categoryColor || '#667eea' : '#e9ecef');
+                rect.setAttribute('stroke', isCurrent ? '#333' : '#999');
+                rect.setAttribute('stroke-width', isCurrent ? 3 : 1.5);
+                group.appendChild(rect);
+                
+                const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                textEl.setAttribute('x', x + nodeWidth / 2);
+                textEl.setAttribute('y', y + nodeHeight / 2 + 5);
+                textEl.setAttribute('text-anchor', 'middle');
+                textEl.setAttribute('fill', isCurrent ? 'white' : '#333');
+                textEl.setAttribute('font-size', '13');
+                textEl.setAttribute('font-weight', isCurrent ? 'bold' : 'normal');
+                
+                // Truncate long text
+                const displayText = text.length > 20 ? text.substring(0, 18) + '...' : text;
+                textEl.textContent = displayText;
+                group.appendChild(textEl);
+                
+                if (!isCurrent && projectId) {
+                    group.addEventListener('click', () => navigateToProject(projectId));
+                    group.addEventListener('mouseenter', () => {
+                        rect.setAttribute('fill', '#667eea');
+                        textEl.setAttribute('fill', 'white');
+                    });
+                    group.addEventListener('mouseleave', () => {
+                        rect.setAttribute('fill', '#e9ecef');
+                        textEl.setAttribute('fill', '#333');
+                    });
+                }
+                
+                return group;
+            }
+
+            // Helper to create an arrow
+            function createArrow(x1, y1, x2, y2) {
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', x1);
+                line.setAttribute('y1', y1);
+                line.setAttribute('x2', x2);
+                line.setAttribute('y2', y2);
+                line.setAttribute('stroke', '#999');
+                line.setAttribute('stroke-width', 2);
+                line.setAttribute('marker-end', 'url(#arrowhead)');
+                return line;
+            }
+
+            // Add arrow marker definition
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+            marker.setAttribute('id', 'arrowhead');
+            marker.setAttribute('markerWidth', 10);
+            marker.setAttribute('markerHeight', 10);
+            marker.setAttribute('refX', 9);
+            marker.setAttribute('refY', 3);
+            marker.setAttribute('orient', 'auto');
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            polygon.setAttribute('points', '0 0, 10 3, 0 6');
+            polygon.setAttribute('fill', '#999');
+            marker.appendChild(polygon);
+            defs.appendChild(marker);
+            svg.appendChild(defs);
+
+            // Calculate positions
+            const currentX = totalWidth / 2 - nodeWidth / 2;
+            const currentY = totalHeight / 2 - nodeHeight / 2;
+            
+            const depsX = 20;
+            const dependantsX = totalWidth - nodeWidth - 20;
+
+            // Draw dependencies (left side)
+            if (dependencies.length > 0) {
+                const depStartY = (totalHeight - (dependencies.length * nodeHeight + (dependencies.length - 1) * verticalGap)) / 2;
+                dependencies.forEach((depId, i) => {
+                    const dep = getProject(depId);
+                    if (dep) {
+                        const y = depStartY + i * (nodeHeight + verticalGap);
+                        svg.appendChild(createNode(depsX, y, dep.name, depId));
+                        svg.appendChild(createArrow(depsX + nodeWidth, y + nodeHeight / 2, currentX, currentY + nodeHeight / 2));
+                    }
+                });
+            }
+
+            // Draw current project (center)
+            svg.appendChild(createNode(currentX, currentY, project.name, project.id, true));
+
+            // Draw dependants (right side)
+            if (dependants.length > 0) {
+                const depStartY = (totalHeight - (dependants.length * nodeHeight + (dependants.length - 1) * verticalGap)) / 2;
+                dependants.forEach((depId, i) => {
+                    const dep = getProject(depId);
+                    if (dep) {
+                        const y = depStartY + i * (nodeHeight + verticalGap);
+                        svg.appendChild(createNode(dependantsX, y, dep.name, depId));
+                        svg.appendChild(createArrow(currentX + nodeWidth, currentY + nodeHeight / 2, dependantsX, y + nodeHeight / 2));
+                    }
+                });
+            }
+
+            container.appendChild(svg);
+            return container;
+        }
+
+        // Render project details
+        function renderProjectDetails(projectId) {
+            const project = getProject(projectId);
+            const container = document.getElementById('main-container');
+            const breadcrumb = document.getElementById('breadcrumb');
+
+            if (!project) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>Project Not Found</h2>
+                        <p>The project "${projectId}" could not be found.</p>
+                        <p><a href="portfolio.html">Return to Portfolio Map</a></p>
+                    </div>
+                `;
+                breadcrumb.innerHTML = 'ProjectMap<span>/</span>Not Found';
+                return;
+            }
+
+            // Set page metadata
+            document.title = project.title;
+            breadcrumb.innerHTML = `ProjectMap<span>/</span>${project.breadcrumb.replace(' / ', '<span>/</span>')}`;
+            
+            // Set accent color
+            if (project.categoryColor) {
+                document.documentElement.style.setProperty('--accent-color', project.categoryColor);
+            }
+
+            // Build content HTML
+            let html = `<h1>${project.title}</h1>`;
+            
+            // Category badge
+            html += `<div class="category-badge" style="background: ${project.categoryColor || '#667eea'}">${project.category}</div>`;
+            
+            // Overview
+            if (project.overview) {
+                html += `<p class="overview">${project.overview}</p>`;
+            }
+
+            // Lineage visualization
+            container.innerHTML = html;
+            if (project.dependencies.length > 0 || project.dependants.length > 0) {
+                container.appendChild(createLineageVisualization(project));
+            }
+
+            // Continue building HTML for remaining sections
+            html = '';
+
+
+
+            // Location
+            if (project.location && project.location.length > 0) {
+                html += `<h2>Location</h2><ul>`;
+                project.location.forEach(loc => {
+                    html += `<li><code>${loc}</code></li>`;
+                });
+                html += `</ul>`;
+            }
+
+            // Dependencies
+            if (project.dependencies && project.dependencies.length > 0) {
+                html += `<h2>Dependencies</h2>`;
+                project.dependencies.forEach(depId => {
+                    const dep = getProject(depId);
+                    if (dep) {
+                        html += `
+                            <div class="dependency-item">
+                                <a class="project-link" onclick="navigateToProject('${dep.id}')">${dep.name}</a>
+                                <div class="description">${dep.shortDescription}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Dependants
+            if (project.dependants && project.dependants.length > 0) {
+                html += `<h2>Dependants</h2>`;
+                project.dependants.forEach(depId => {
+                    const dep = getProject(depId);
+                    if (dep) {
+                        html += `
+                            <div class="dependency-item">
+                                <a class="project-link" onclick="navigateToProject('${dep.id}')">${dep.name}</a>
+                                <div class="description">${dep.shortDescription}</div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            // Integrations
+            if (project.integrations && project.integrations.length > 0) {
+                html += `<h2>Integrations</h2><ul>`;
+                project.integrations.forEach(intId => {
+                    const int = getProject(intId);
+                    if (int) {
+                        html += `<li><a class="project-link" onclick="navigateToProject('${int.id}')">${int.name}</a></li>`;
+                    }
+                });
+                html += `</ul>`;
+            }
+
+            // Requirements
+            if (project.requirements && project.requirements.length > 0) {
+                html += `<h2>Requirements</h2><ul>`;
+                project.requirements.forEach(req => {
+                    html += `<li>${req}</li>`;
+                });
+                html += `</ul>`;
+            }
+
+            // Related Projects
+            if (project.relatedProjects && project.relatedProjects.length > 0) {
+                html += `<h2>Related Projects</h2><ul>`;
+                project.relatedProjects.forEach(relId => {
+                    const rel = getProject(relId);
+                    if (rel) {
+                        html += `<li><a class="project-link" onclick="navigateToProject('${rel.id}')">${rel.name}</a></li>`;
+                    }
+                });
+                html += `</ul>`;
+            }
+
+            // Examples (if defined in data.js)
+            if (project.examples && project.examples.length > 0) {
+                html += `<h2>Examples</h2>`;
+                project.examples.forEach(example => {
+                    if (example.title) {
+                        html += `<h3>${example.title}</h3>`;
+                    }
+                    if (example.description) {
+                        html += `<p>${example.description}</p>`;
+                    }
+                    if (example.code) {
+                        html += `<pre><code>${example.code}</code></pre>`;
+                    }
+                });
+            }
+
+            // Contact & Support
+            if (project.contactSupport && project.contactSupport.length > 0) {
+                html += `<h2>Contact & Support</h2><ul>`;
+                project.contactSupport.forEach(contact => {
+                    html += `<li>${contact}</li>`;
+                });
+                html += `</ul>`;
+            }
+
+            container.innerHTML += html;
+        }
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', () => {
+            const projectId = getProjectIdFromURL();
+            
+            if (!projectId) {
+                const container = document.getElementById('main-container');
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h2>No Project Selected</h2>
+                        <p>Please select a project from the portfolio map.</p>
+                        <p><a href="portfolio.html">Go to Portfolio Map</a></p>
+                    </div>
+                `;
+                return;
+            }
+
+            renderProjectDetails(projectId);
+        });
+
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', () => {
+            const projectId = getProjectIdFromURL();
+            if (projectId) {
+                renderProjectDetails(projectId);
+            }
+        });
+    </script>
+</body>
+</html>

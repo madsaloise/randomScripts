@@ -1,0 +1,132 @@
+/* ProjectMap Documentation Styles */
+
+:root {
+    --color-warehouse: #9C27B0;
+    --color-qliksense: #2196F3;
+    --color-qlikview: #00BCD4;
+    --color-automation: #FF9800;
+    --color-tools: #4CAF50;
+    --color-devops: #607D8B;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f5f5f5;
+}
+
+/* Navigation */
+.nav-header {
+    background: white;
+    padding: 15px 20px;
+    margin: -20px -20px 30px -20px;
+    border-bottom: 2px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-header a {
+    color: #546e7a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-header a:hover {
+    color: var(--accent-color, #2c3e50);
+}
+
+.breadcrumb {
+    font-size: 0.9em;
+    color: #78909c;
+    margin-top: 5px;
+}
+
+.breadcrumb span {
+    margin: 0 5px;
+}
+
+/* Typography */
+h1 {
+    color: #2c3e50;
+    border-bottom: 3px solid var(--accent-color, #9C27B0);
+    padding-bottom: 10px;
+}
+
+h2 {
+    color: #34495e;
+    margin-top: 30px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+}
+
+h3 {
+    color: #546e7a;
+    margin-top: 20px;
+}
+
+h4 {
+    color: #607d8b;
+    margin-top: 15px;
+}
+
+/* Code */
+code {
+    background: #f4f4f4;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    color: #c7254e;
+}
+
+pre {
+    background: #282c34;
+    color: #abb2bf;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    border-left: 4px solid var(--accent-color, #9C27B0);
+}
+
+pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+}
+
+/* Lists */
+ul, ol {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+/* Links */
+strong {
+    color: #2c3e50;
+}
+
+a {
+    color: var(--accent-color, #9C27B0);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Special elements */
+.output-box {
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}

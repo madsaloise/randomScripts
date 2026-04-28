@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MchWork-1 Project Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .canvas-container {
+            width: 100%;
+            height: 800px;
+            position: relative;
+            overflow: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+        }
+
+        svg {
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        .node {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .node:hover .node-box {
+            filter: brightness(0.95);
+            stroke-width: 3;
+        }
+
+        .node-box {
+            stroke: #333;
+            stroke-width: 2;
+            rx: 8;
+        }
+
+        .node-text {
+            pointer-events: none;
+            font-weight: 600;
+        }
+
+        .node-desc {
+            pointer-events: none;
+            font-size: 12px;
+            fill: #666;
+        }
+
+        .connection {
+            fill: none;
+            stroke: #999;
+            stroke-width: 2;
+            opacity: 0.6;
+            marker-end: url(#arrowhead);
+        }
+
+        .connection.highlighted {
+            stroke: #667eea;
+            stroke-width: 3;
+            opacity: 1;
+        }
+
+        .category-Warehouse { fill: #9C27B0; }
+        .category-QlikSense { fill: #2196F3; }
+        .category-QlikView { fill: #00BCD4; }
+        .category-automation { fill: #FF9800; }
+        .category-other-tools { fill: #4CAF50; }
+        .category-Azure-Devops { fill: #607D8B; }
+
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #333;
+        }
+
+        .info-panel {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 350px;
+            display: none;
+        }
+
+        .info-panel.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+
+        .info-panel h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-panel .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .info-panel p {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .info-panel .dependencies {
+            margin-top: 15px;
+        }
+
+        .info-panel .dependencies h4 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .info-panel .dependencies ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-panel .dependencies li {
+            padding: 4px 0;
+            color: #333;
+        }
+
+        .info-panel a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .info-panel a:hover {
+            background: #764ba2;
+        }
+
+        .close-info {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-info:hover {
+            color: #333;
+        }
+
+        /* View Toggle Styles */
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 15px;
+        }
+
+        .view-btn {
+            padding: 10px 24px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .view-btn:first-child {
+            border-radius: 20px 0 0 20px;
+        }
+
+        .view-btn:last-child {
+            border-radius: 0 20px 20px 0;
+            border-left: none;
+        }
+
+        .view-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .view-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* List View Styles */
+        .list-view {
+            display: none;
+        }
+
+        .list-view.active {
+            display: block;
+        }
+
+        .category-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+        }
+
+        .category-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+
+        .category-icon {
+            font-size: 1.5em;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .project-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 4px solid;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .project-card h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .project-card p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .project-card .location {
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #999;
+            font-family: 'Consolas', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗺️ MchWork-1 Project Map</h1>
+        <p class="subtitle">Interactive overview of all projects, systems, and dependencies</p>
+
+        <div class="controls">
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="map">📊 Map View</button>
+                <button class="view-btn" data-view="list">📋 List View</button>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Projects</button>
+                <button class="filter-btn" data-filter="Warehouse">Warehouse</button>
+                <button class="filter-btn" data-filter="QlikSense">QlikSense</button>
+                <button class="filter-btn" data-filter="QlikView">QlikView</button>
+                <button class="filter-btn" data-filter="automation">Automation</button>
+                <button class="filter-btn" data-filter="other tools">Other Tools</button>
+                <button class="filter-btn" data-filter="Azure Devops">Azure DevOps</button>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div class="canvas-container">
+                <svg id="project-map" width="1500" height="1000">
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#999" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color category-Warehouse"></div>
+                    <span>Warehouse</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color category-QlikSense"></div>
+                    <span>QlikSense</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color category-QlikView"></div>
+                    <span>QlikView</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color category-automation"></div>
+                    <span>Automation</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color category-other-tools"></div>
+                    <span>Other Tools</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color category-Azure-Devops"></div>
+                    <span>Azure DevOps</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- List View Container -->
+        <div class="list-view" id="list-view">
+            <!-- Generated dynamically by JavaScript -->
+        </div>
+    </div>
+
+    <div class="info-panel" id="info-panel">
+        <button class="close-info" onclick="closeInfoPanel()">×</button>
+        <div id="info-content"></div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // ============================================
+        // PROJECT DATA - Loaded from data.js
+        // ============================================
+        const systems = getAllProjects();
+
+        // ============================================
+        // LAYOUT ENGINE
+        // ============================================
+        const layout = {
+            nodeWidth: 180,
+            nodeHeight: 80,
+            horizontalSpacing: 250,
+            verticalSpacing: 150,
+            startX: 50,
+            startY: 50
+        };
+
+        // Organize systems by category for better layout
+        function calculatePositions(systems) {
+            const layers = {
+                Warehouse: [],
+                QlikSense: [],
+                QlikView: [],
+                automation: [],
+                "other tools": [],
+                "Azure Devops": []
+            };
+
+            systems.forEach(sys => {
+                if (layers[sys.category]) {
+                    layers[sys.category].push(sys);
+                }
+            });
+
+            const positions = {};
+            let currentY = layout.startY;
+
+            Object.keys(layers).forEach(category => {
+                const items = layers[category];
+                if (items.length === 0) return;
+
+                const layerWidth = items.length * layout.horizontalSpacing;
+                let currentX = layout.startX + (1400 - layerWidth) / 2;
+
+                items.forEach(item => {
+                    positions[item.id] = {
+                        x: currentX,
+                        y: currentY
+                    };
+                    currentX += layout.horizontalSpacing;
+                });
+
+                currentY += layout.verticalSpacing;
+            });
+
+            return positions;
+        }
+
+        // ============================================
+        // RENDERING
+        // ============================================
+        function renderMap(systems) {
+            const svg = document.getElementById('project-map');
+            const positions = calculatePositions(systems);
+
+            // Draw connections first (so they appear behind nodes)
+            systems.forEach(system => {
+                system.dependencies.forEach(depId => {
+                    const from = positions[system.id];
+                    const to = positions[depId];
+                if (from && to) {
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const startX = from.x + layout.nodeWidth / 2;
+                    const startY = from.y + layout.nodeHeight;
+                    const endX = to.x + layout.nodeWidth / 2;
+                    const endY = to.y;
+
+                    const d = `M ${startX} ${startY} C ${startX} ${(startY + endY) / 2}, ${endX} ${(startY + endY) / 2}, ${endX} ${endY}`;
+                    path.setAttribute('d', d);
+                    path.setAttribute('class', 'connection');
+                    path.setAttribute('data-from', system.id);
+                    path.setAttribute('data-to', depId);
+                    svg.appendChild(path);
+                }
+            });
+        });
+
+        // Draw nodes
+        systems.forEach(system => {
+            const pos = positions[system.id];
+            if (!pos) return;
+
+            const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            group.setAttribute('class', 'node');
+            group.setAttribute('data-id', system.id);
+            group.setAttribute('data-category', system.category);
+
+            // Background box
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', pos.x);
+            rect.setAttribute('y', pos.y);
+            rect.setAttribute('width', layout.nodeWidth);
+            rect.setAttribute('height', layout.nodeHeight);
+            const categoryClass = system.category.replace(/\s+/g, '-');
+            rect.setAttribute('class', `node-box category-${categoryClass}`);
+            group.appendChild(rect);
+
+            // Title
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', pos.x + layout.nodeWidth / 2);
+            text.setAttribute('y', pos.y + 30);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('class', 'node-text');
+            text.setAttribute('fill', 'white');
+            text.textContent = system.name;
+            group.appendChild(text);
+
+            // Description (truncated)
+            const desc = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            desc.setAttribute('x', pos.x + layout.nodeWidth / 2);
+            desc.setAttribute('y', pos.y + 50);
+            desc.setAttribute('text-anchor', 'middle');
+            desc.setAttribute('class', 'node-desc');
+            desc.setAttribute('fill', 'white');
+            const shortDesc = system.shortDescription.length > 30 
+                ? system.shortDescription.substring(0, 27) + '...' 
+                : system.shortDescription;
+            desc.textContent = shortDesc;
+            group.appendChild(desc);
+
+            // Click handler
+            group.addEventListener('click', () => showInfo(system));
+
+            svg.appendChild(group);
+        });
+        }
+
+        // ============================================
+        // INTERACTION
+        // ============================================
+        function showInfo(system) {
+            const panel = document.getElementById('info-panel');
+            const content = document.getElementById('info-content');
+
+            const categoryColors = {
+                Warehouse: '#9C27B0',
+                QlikSense: '#2196F3',
+                QlikView: '#00BCD4',
+                automation: '#FF9800',
+                'other tools': '#4CAF50',
+                'Azure Devops': '#607D8B'
+            };
+
+            let depsHTML = '';
+            if (system.dependencies.length > 0) {
+                const depNames = system.dependencies.map(id => {
+                    const dep = systems.find(s => s.id === id);
+                    return dep ? dep.name : id;
+                });
+                depsHTML = `
+                    <div class="dependencies">
+                        <h4>Dependencies:</h4>
+                        <ul>
+                            ${depNames.map(name => `<li>→ ${name}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = `
+                <h3>${system.name}</h3>
+                <span class="category-badge" style="background: ${categoryColors[system.category]}">${system.category}</span>
+                <p>${system.shortDescription}</p>
+                ${depsHTML}
+                <a href="project-detail.html?project=${system.id}">View Details →</a>
+            `;
+
+            panel.classList.add('active');
+
+            // Highlight connections
+            document.querySelectorAll('.connection').forEach(conn => {
+                conn.classList.remove('highlighted');
+                if (conn.getAttribute('data-from') === system.id || conn.getAttribute('data-to') === system.id) {
+                    conn.classList.add('highlighted');
+                }
+            });
+        }
+
+        function closeInfoPanel() {
+            document.getElementById('info-panel').classList.remove('active');
+            document.querySelectorAll('.connection').forEach(conn => {
+                conn.classList.remove('highlighted');
+            });
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // Filter nodes in MAP VIEW
+                document.querySelectorAll('.node').forEach(node => {
+                    const category = node.getAttribute('data-category');
+                    if (filter === 'all' || category === filter || category.toLowerCase() === filter.toLowerCase()) {
+                        node.style.display = 'block';
+                    } else {
+                        node.style.display = 'none';
+                    }
+                });
+
+                // Filter connections - only show if BOTH nodes are visible
+                document.querySelectorAll('.connection').forEach(conn => {
+                    const fromId = conn.getAttribute('data-from');
+                    const toId = conn.getAttribute('data-to');
+                    const fromSystem = systems.find(s => s.id === fromId);
+                    const toSystem = systems.find(s => s.id === toId);
+                    
+                    const fromMatches = filter === 'all' || 
+                        (fromSystem && (fromSystem.category === filter || fromSystem.category.toLowerCase() === filter.toLowerCase()));
+                    const toMatches = filter === 'all' || 
+                        (toSystem && (toSystem.category === filter || toSystem.category.toLowerCase() === filter.toLowerCase()));
+                    
+                    // Only show connection if BOTH source and target are visible
+                    if (fromMatches && toMatches) {
+                        conn.style.display = 'block';
+                    } else {
+                        conn.style.display = 'none';
+                    }
+                });
+
+                // Filter categories in LIST VIEW
+                document.querySelectorAll('.category-section').forEach(section => {
+                    const categoryHeader = section.querySelector('.category-header h3');
+                    if (!categoryHeader) return;
+                    
+                    const categoryName = categoryHeader.textContent.trim();
+                    if (filter === 'all' || categoryName === filter || categoryName.toLowerCase() === filter.toLowerCase()) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Close panel when clicking outside
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('info-panel');
+            if (!panel.contains(e.target) && !e.target.closest('.node')) {
+                closeInfoPanel();
+            }
+        });
+
+        // ============================================
+        // LIST VIEW
+        // ============================================
+        function renderListView(systems) {
+            const listContainer = document.getElementById('list-view');
+            
+            // Group systems by category
+            const categories = {
+                'Warehouse': { color: '#9C27B0', icon: '🏛️', projects: [] },
+                'QlikSense': { color: '#2196F3', icon: '🔵', projects: [] },
+                'QlikView': { color: '#00BCD4', icon: '🔷', projects: [] },
+                'automation': { color: '#FF9800', icon: '⚙️', projects: [] },
+                'other tools': { color: '#4CAF50', icon: '🛠️', projects: [] },
+                'Azure Devops': { color: '#607D8B', icon: '🔧', projects: [] }
+            };
+
+            systems.forEach(system => {
+                if (categories[system.category]) {
+                    categories[system.category].projects.push(system);
+                }
+            });
+
+            let html = '';
+            Object.keys(categories).forEach(catName => {
+                const cat = categories[catName];
+                if (cat.projects.length === 0) return;
+
+                html += `
+                    <div class="category-section">
+                        <div class="category-header" style="border-bottom-color: ${cat.color}">
+                            <span class="category-icon">${cat.icon}</span>
+                            <h3 style="color: ${cat.color}">${catName}</h3>
+                        </div>
+                        <div class="project-grid">
+                `;
+
+                cat.projects.forEach(project => {
+                    html += `
+                        <div class="project-card" style="border-left-color: ${cat.color}" 
+                             onclick="window.location.href='project-detail.html?project=${project.id}'">
+                            <h4>${project.name}</h4>
+                            <p>${project.shortDescription}</p>
+                            ${project.location && project.location.length > 0 
+                                ? `<div class="location">📁 ${project.location[0]}</div>` 
+                                : ''}
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            listContainer.innerHTML = html;
+        }
+
+        // ============================================
+        // VIEW SWITCHING
+        // ============================================
+        function switchView(viewName) {
+            const mapContainer = document.querySelector('.map-container');
+            const listContainer = document.getElementById('list-view');
+            const viewButtons = document.querySelectorAll('.view-btn');
+
+            // Update button states
+            viewButtons.forEach(btn => {
+                if (btn.getAttribute('data-view') === viewName) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Toggle views
+            if (viewName === 'map') {
+                mapContainer.style.display = 'block';
+                listContainer.classList.remove('active');
+            } else {
+                mapContainer.style.display = 'none';
+                listContainer.classList.add('active');
+            }
+        }
+
+        // View toggle event listeners
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.getAttribute('data-view');
+                switchView(view);
+            });
+        });
+
+        // ============================================
+        // INITIALIZE - RENDER BOTH VIEWS
+        // ============================================
+        renderMap(systems);
+        renderListView(systems);
+    </script>
+</body>
+</html>
