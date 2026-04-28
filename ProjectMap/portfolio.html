@@ -15,17 +15,42 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
-            max-width: 1600px;
-            margin: 0 auto;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar h2 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         h1 {
             color: white;
-            text-align: center;
             margin-bottom: 10px;
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -33,45 +58,64 @@
 
         .subtitle {
             color: rgba(255,255,255,0.9);
-            text-align: center;
             margin-bottom: 30px;
             font-size: 1.1em;
         }
 
-        .controls {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
+        .search-box {
+            width: 100%;
+            padding: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section h3 {
+            color: #333;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .filter-buttons {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .filter-btn {
-            padding: 8px 16px;
-            border: 2px solid #667eea;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
             background: white;
-            color: #667eea;
-            border-radius: 20px;
+            color: #333;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
+            transition: all 0.2s;
+            text-align: left;
+            font-size: 0.9em;
         }
 
         .filter-btn:hover {
-            background: #667eea;
-            color: white;
+            background: #f5f5f5;
+            border-color: #667eea;
         }
 
         .filter-btn.active {
             background: #667eea;
             color: white;
+            border-color: #667eea;
+            font-weight: 600;
         }
 
         .category-section {
@@ -143,24 +187,51 @@
 </head>
 <body>
     <div class="container">
-        <h1>� MchWork-1 Project Portfolio</h1>
-        <p class="subtitle">Interactive overview of all projects, systems, and dependencies</p>
-
-        <div class="controls">
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">All Projects</button>
-                <button class="filter-btn" data-filter="Warehouse">Warehouse</button>
-                <button class="filter-btn" data-filter="QlikSense">QlikSense</button>
-                <button class="filter-btn" data-filter="QlikView">QlikView</button>
-                <button class="filter-btn" data-filter="automation">Automation</button>
-                <button class="filter-btn" data-filter="Azure Devops">Azure DevOps</button>
-                <button class="filter-btn" data-filter="other tools">Other Tools</button>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Filters</h2>
+            
+            <!-- Search Box -->
+            <input type="text" id="search-box" class="search-box" placeholder="Search projects...">
+            
+            <!-- Category Filter -->
+            <div class="filter-section">
+                <h3>Category</h3>
+                <div class="filter-buttons">
+                <button class="filter-btn category-filter active" data-filter-type="category" data-filter="all">All Projects</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="Warehouse">Warehouse</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="QlikSense">QlikSense</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="QlikView">QlikView</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="automation">Automation</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="Azure Devops">Azure DevOps</button>
+                <button class="filter-btn category-filter" data-filter-type="category" data-filter="other tools">Other Tools</button>
+                </div>
+            </div>
+            
+            <!-- Language Filter -->
+            <div class="filter-section">
+                <h3>Languages</h3>
+                <div class="filter-buttons">
+                <button class="filter-btn language-filter active" data-filter-type="language" data-filter="all">All Languages</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="Qlik">Qlik</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="SQL">SQL</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="PowerShell">PowerShell</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="C#">C#</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="Python">Python</button>
+                <button class="filter-btn language-filter" data-filter-type="language" data-filter="JavaScript">JavaScript</button>
+                </div>
             </div>
         </div>
 
-        <!-- List View Container -->
-        <div id="list-view">
-            <!-- Generated dynamically by JavaScript -->
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1>MchWork-1 Project Portfolio</h1>
+            <p class="subtitle">Interactive overview of all projects, systems, and dependencies</p>
+
+            <!-- List View Container -->
+            <div id="list-view">
+                <!-- Generated dynamically by JavaScript -->
+            </div>
         </div>
     </div>
 
@@ -220,11 +291,12 @@
                 cat.projects.forEach(project => {
                     html += `
                         <div class="project-card" style="border-left-color: ${cat.color}" 
+                             data-project-id="${project.id}"
                              onclick="window.location.href='project-detail.html?project=${project.id}'">
                             <h4>${project.name}</h4>
                             <p>${project.shortDescription}</p>
                             ${project.location && project.location.length > 0 
-                                ? `<div class="location">📁 ${project.location[0]}</div>` 
+                                ? `<div class="location">${project.location[0]}</div>` 
                                 : ''}
                         </div>
                     `;
@@ -242,28 +314,99 @@
         // ============================================
         // FILTER FUNCTIONALITY
         // ============================================
-        document.querySelectorAll('.filter-btn').forEach(btn => {
+        let activeFilters = {
+            category: 'all',
+            language: 'all',
+            search: ''
+        };
+
+        function applyFilters() {
+            document.querySelectorAll('.category-section').forEach(section => {
+                const categoryKey = section.getAttribute('data-category');
+                const categoryHeader = section.querySelector('.category-header h3');
+                if (!categoryHeader) return;
+                
+                const categoryName = categoryHeader.textContent.trim();
+                
+                // Check if category matches
+                const categoryMatches = activeFilters.category === 'all' || 
+                    categoryKey === activeFilters.category || 
+                    categoryName === activeFilters.category || 
+                    categoryName.toLowerCase() === activeFilters.category.toLowerCase();
+                
+                // Get all project cards in this section
+                const projectCards = section.querySelectorAll('.project-card');
+                let hasVisibleProjects = false;
+                
+                projectCards.forEach(card => {
+                    const projectId = card.getAttribute('data-project-id');
+                    const project = systems.find(s => s.id === projectId);
+                    
+                    if (!project) {
+                        card.style.display = 'none';
+                        return;
+                    }
+                    
+                    // Check if language matches
+                    const languageMatches = activeFilters.language === 'all' || 
+                        (project.languages && project.languages.includes(activeFilters.language));
+                    
+                    // Check if search matches
+                    const searchMatches = activeFilters.search === '' || 
+                        project.name.toLowerCase().includes(activeFilters.search.toLowerCase()) ||
+                        project.shortDescription.toLowerCase().includes(activeFilters.search.toLowerCase());
+                    
+                    // Show card if all filters match
+                    if (categoryMatches && languageMatches && searchMatches) {
+                        card.style.display = 'block';
+                        hasVisibleProjects = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+                
+                // Hide category section if no projects are visible
+                if (hasVisibleProjects && categoryMatches) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+
+        // Category filter buttons
+        document.querySelectorAll('.category-filter').forEach(btn => {
             btn.addEventListener('click', () => {
                 const filter = btn.getAttribute('data-filter');
                 
                 // Update active button
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.category-filter').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-
-                // Filter category sections
-                document.querySelectorAll('.category-section').forEach(section => {
-                    const categoryKey = section.getAttribute('data-category');
-                    const categoryHeader = section.querySelector('.category-header h3');
-                    if (!categoryHeader) return;
-                    
-                    const categoryName = categoryHeader.textContent.trim();
-                    if (filter === 'all' || categoryKey === filter || categoryName === filter || categoryName.toLowerCase() === filter.toLowerCase()) {
-                        section.style.display = 'block';
-                    } else {
-                        section.style.display = 'none';
-                    }
-                });
+                
+                activeFilters.category = filter;
+                applyFilters();
             });
+        });
+
+        // Language filter buttons
+        document.querySelectorAll('.language-filter').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.getAttribute('data-filter');
+                
+                // Update active button
+                document.querySelectorAll('.language-filter').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                activeFilters.language = filter;
+                applyFilters();
+            });
+        });
+
+        // Search box
+        const searchBox = document.getElementById('search-box');
+        searchBox.addEventListener('input', (e) => {
+            activeFilters.search = e.target.value;
+            applyFilters();
         });
 
         // ============================================

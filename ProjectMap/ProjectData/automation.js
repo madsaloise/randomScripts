@@ -5,6 +5,7 @@ const automationProjects = {
         name: "Monthly Tasks",
         category: "automation",
         categoryColor: "#FF9800",
+        languages: ["PowerShell"],
         shortDescription: "Automated monthly QVD transfers, health checks, and notifications",
         overview: "Scheduled automation framework for monthly BI operations. Handles QVD file transfers, health checks, link validation, and email notifications. Modular PowerShell architecture with centralized task orchestration.",
         location: ["MonthlyTasks/"],
