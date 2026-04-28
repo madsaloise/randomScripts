@@ -215,6 +215,12 @@
         <div class="loading">Loading project details...</div>
     </div>
 
+    <!-- Load category data files -->
+    <script src="ProjectData/warehouse.js"></script>
+    <script src="ProjectData/qlikview.js"></script>
+    <script src="ProjectData/automation.js"></script>
+    <script src="ProjectData/other-tools.js"></script>
+    <!-- Load data.js which merges all categories -->
     <script src="data.js"></script>
     <script>
         // Get project ID from URL parameter
@@ -253,7 +259,7 @@
             const verticalGap = 40;
             
             const dependencies = project.dependencies || [];
-            const dependants = project.dependants || [];
+            const dependants = getDependants(project.id) || [];
             
             const maxDeps = Math.max(dependencies.length, dependants.length, 1);
             const totalWidth = nodeWidth * 3 + horizontalGap * 2;
@@ -415,7 +421,8 @@
 
             // Lineage visualization
             container.innerHTML = html;
-            if (project.dependencies.length > 0 || project.dependants.length > 0) {
+            const dependants = getDependants(project.id);
+            if (project.dependencies.length > 0 || dependants.length > 0) {
                 container.appendChild(createLineageVisualization(project));
             }
 
@@ -450,9 +457,10 @@
             }
 
             // Dependants
-            if (project.dependants && project.dependants.length > 0) {
+            const projectDependants = getDependants(project.id);
+            if (projectDependants && projectDependants.length > 0) {
                 html += `<h2>Dependants</h2>`;
-                project.dependants.forEach(depId => {
+                projectDependants.forEach(depId => {
                     const dep = getProject(depId);
                     if (dep) {
                         html += `
@@ -482,18 +490,6 @@
                 html += `<h2>Requirements</h2><ul>`;
                 project.requirements.forEach(req => {
                     html += `<li>${req}</li>`;
-                });
-                html += `</ul>`;
-            }
-
-            // Related Projects
-            if (project.relatedProjects && project.relatedProjects.length > 0) {
-                html += `<h2>Related Projects</h2><ul>`;
-                project.relatedProjects.forEach(relId => {
-                    const rel = getProject(relId);
-                    if (rel) {
-                        html += `<li><a class="project-link" onclick="navigateToProject('${rel.id}')">${rel.name}</a></li>`;
-                    }
                 });
                 html += `</ul>`;
             }
