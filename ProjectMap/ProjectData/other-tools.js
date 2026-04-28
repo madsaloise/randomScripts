@@ -5,7 +5,6 @@ const otherToolsProjects = {
         name: "MCHs PowerShell Profile",
         category: "other tools",
         categoryColor: "#4CAF50",
-        breadcrumb: "Tools / MCHs PowerShell Profile",
         shortDescription: "Custom PowerShell profile with Qlik clients and utilities",
         overview: "Custom PowerShell profile with enhanced logging, Qlik client classes, Outlook integration, and utility modules. Provides reusable components for BI automation and system administration tasks.",
         location: ["pwshProfile/"],

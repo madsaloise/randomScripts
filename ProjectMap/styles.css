@@ -38,16 +38,6 @@ body {
     color: var(--accent-color, #2c3e50);
 }
 
-.breadcrumb {
-    font-size: 0.9em;
-    color: #78909c;
-    margin-top: 5px;
-}
-
-.breadcrumb span {
-    margin: 0 5px;
-}
-
 /* Typography */
 h1 {
     color: #2c3e50;

@@ -5,11 +5,10 @@ const qlikviewProjects = {
         name: "QlikView Engine",
         category: "QlikView",
         categoryColor: "#00BCD4",
-        breadcrumb: "QlikView / Engine",
         shortDescription: "QlikView client libraries and automation",
         overview: "PowerShell class-based client library for QlikView automation. Provides programmatic access to QlikView Desktop for opening, reloading, and saving QVW files. Used across multiple automation projects.",
         location: ["pwshProfile/QlikClasses/"],
-        dependencies: ["dwh-core"],
+        dependencies: ["SQLToQV_Converter"],
         integrations: ["qv-automation", "monthly-tasks", "sql-qv-converter", "pwsh-profile"],
         requirements: [
             "QlikView Desktop installed",
