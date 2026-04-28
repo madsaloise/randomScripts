@@ -392,8 +392,9 @@
                 <button class="filter-btn" data-filter="QlikSense">QlikSense</button>
                 <button class="filter-btn" data-filter="QlikView">QlikView</button>
                 <button class="filter-btn" data-filter="automation">Automation</button>
-                <button class="filter-btn" data-filter="other tools">Other Tools</button>
                 <button class="filter-btn" data-filter="Azure Devops">Azure DevOps</button>
+                <button class="filter-btn" data-filter="other tools">Other Tools</button>
+                
             </div>
         </div>
 
@@ -449,9 +450,11 @@
 
     <!-- Load category data files -->
     <script src="ProjectData/warehouse.js"></script>
+    <script src="ProjectData/qliksense.js"></script>
     <script src="ProjectData/qlikview.js"></script>
     <script src="ProjectData/automation.js"></script>
     <script src="ProjectData/other-tools.js"></script>
+    <script src="ProjectData/azure-devops.js"></script>
     <!-- Load data.js which merges all categories -->
     <script src="data.js"></script>
     <script>
@@ -474,14 +477,11 @@
 
         // Organize systems by category for better layout
         function calculatePositions(systems) {
-            const layers = {
-                Warehouse: [],
-                QlikSense: [],
-                QlikView: [],
-                automation: [],
-                "other tools": [],
-                "Azure Devops": []
-            };
+            // Build layers from categories in data.js
+            const layers = {};
+            Object.keys(categories).forEach(catKey => {
+                layers[catKey] = [];
+            });
 
             systems.forEach(sys => {
                 if (layers[sys.category]) {
@@ -599,14 +599,8 @@
             const panel = document.getElementById('info-panel');
             const content = document.getElementById('info-content');
 
-            const categoryColors = {
-                Warehouse: '#9C27B0',
-                QlikSense: '#2196F3',
-                QlikView: '#00BCD4',
-                automation: '#FF9800',
-                'other tools': '#4CAF50',
-                'Azure Devops': '#607D8B'
-            };
+            // Get category color from data.js
+            const categoryColor = categories[system.category]?.color || '#666';
 
             let depsHTML = '';
             if (system.dependencies.length > 0) {
@@ -626,7 +620,7 @@
 
             content.innerHTML = `
                 <h3>${system.name}</h3>
-                <span class="category-badge" style="background: ${categoryColors[system.category]}">${system.category}</span>
+                <span class="category-badge" style="background: ${categoryColor}">${system.category}</span>
                 <p>${system.shortDescription}</p>
                 ${depsHTML}
                 <a href="project-detail.html?project=${system.id}">View Details →</a>
@@ -718,32 +712,34 @@
         function renderListView(systems) {
             const listContainer = document.getElementById('list-view');
             
-            // Group systems by category
-            const categories = {
-                'Warehouse': { color: '#9C27B0', icon: '🏛️', projects: [] },
-                'QlikSense': { color: '#2196F3', icon: '🔵', projects: [] },
-                'QlikView': { color: '#00BCD4', icon: '🔷', projects: [] },
-                'automation': { color: '#FF9800', icon: '⚙️', projects: [] },
-                'other tools': { color: '#4CAF50', icon: '🛠️', projects: [] },
-                'Azure Devops': { color: '#607D8B', icon: '🔧', projects: [] }
-            };
+            // Use categories from data.js instead of hardcoding
+            const categoryGroups = {};
+            Object.keys(categories).forEach(catKey => {
+                const cat = categories[catKey];
+                categoryGroups[catKey] = {
+                    color: cat.color,
+                    icon: cat.icon,
+                    displayName: cat.displayName,
+                    projects: []
+                };
+            });
 
             systems.forEach(system => {
-                if (categories[system.category]) {
-                    categories[system.category].projects.push(system);
+                if (categoryGroups[system.category]) {
+                    categoryGroups[system.category].projects.push(system);
                 }
             });
 
             let html = '';
-            Object.keys(categories).forEach(catName => {
-                const cat = categories[catName];
+            Object.keys(categoryGroups).forEach(catKey => {
+                const cat = categoryGroups[catKey];
                 if (cat.projects.length === 0) return;
 
                 html += `
                     <div class="category-section">
                         <div class="category-header" style="border-bottom-color: ${cat.color}">
                             <span class="category-icon">${cat.icon}</span>
-                            <h3 style="color: ${cat.color}">${catName}</h3>
+                            <h3 style="color: ${cat.color}">${cat.displayName}</h3>
                         </div>
                         <div class="project-grid">
                 `;

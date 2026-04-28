@@ -1,9 +1,11 @@
 // Merge all category project files into one projectData object
 const projectData = {
     ...warehouseProjects,
+    ...qliksenseProjects,
     ...qlikviewProjects,
     ...automationProjects,
-    ...otherToolsProjects
+    ...otherToolsProjects,
+    ...azureDevopsProjects
 };
 
 // Category definitions
@@ -28,15 +30,15 @@ const categories = {
         displayName: "Automation",
         icon: "⚙️"
     },
-    "other tools": {
-        color: "#4CAF50",
-        displayName: "Other Tools",
-        icon: "🛠️"
-    },
     "Azure Devops": {
         color: "#607D8B",
         displayName: "Azure DevOps",
         icon: "🔧"
+    },
+    "other tools": {
+        color: "#4CAF50",
+        displayName: "Other Tools",
+        icon: "🛠️"
     }
 };
 
