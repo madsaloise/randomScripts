@@ -4,39 +4,42 @@ Interactive technical documentation and project portfolio for the MchWork-1 work
 
 ## 🚀 Getting Started
 
-**Open `index.html` in your browser** to access the documentation hub.
+**Open [portfolio.html](portfolio.html) in your browser** to access the interactive project portfolio.
 
-Or jump directly to:
-- **[Interactive Portfolio Map](portfolio.html)** - Visual project dependency graph
-- **[Project Details](project-detail.html)** - Dynamic project detail pages (navigated via portfolio map)
+- Browse all projects with category and language filtering
+- Search projects by name or description
+- Click any project to view detailed documentation
 
 ## 📁 Structure
 
 ```
 ProjectMap/
-├── index.html              # Documentation hub (START HERE)
-├── portfolio.html          # Interactive SVG project map
-├── project-detail.html     # ✨ NEW: Dynamic project detail page
+├── portfolio.html          # Interactive project portfolio (START HERE)
+├── project-detail.html     # Dynamic project detail page
 ├── styles.css              # Shared stylesheet
 ├── data.js                 # Single source of truth for all project metadata
-└── ProjectData/            # Legacy static HTML files (deprecated)
+└── ProjectData/            # Category-specific project data files
+    ├── warehouse.js
+    ├── qliksense.js
+    ├── qlikview.js
+    ├── automation.js
+    ├── other-tools.js
+    └── azure-devops.js
 ```
 
 ## 🗂️ Data Architecture
 
-**Centralized Metadata:** All project information is stored in `data.js`:
-- Project titles, categories, colors
-- Dependencies and integrations
-- Locations and descriptions
-- Breadcrumb navigation paths
-- **✨ NEW:** Example code snippets
+**Modular Data Structure:** Project data is organized into category files under `ProjectData/`:
+- Each category has its own `.js` file (e.g., `warehouse.js`, `qlikview.js`)
+- `data.js` merges all category files into a single source of truth
+- Categories define colors and display names centrally
 
-**Dynamic Loading:** The new `project-detail.html` page:
-1. Reads project ID from URL (`?project=dwh-core`)
+**Dynamic Rendering:** The `project-detail.html` page:
+1. Reads project ID from URL (`?project=BI_Warehouse`)
 2. Loads all data dynamically from `data.js`
-3. Renders lineage visualization
+3. Renders lineage visualization showing dependencies and dependants
 4. Creates clickable navigation between projects
-5. **No static HTML files needed!**
+5. Automatically calculates project relationships
 
 ## 🎨 Categories
 
@@ -53,21 +56,21 @@ Documentation is organized into color-coded categories:
 
 ## 💡 Features
 
-- **Dual View Modes** - Toggle between interactive Map View and organized List View
+- **Sidebar Filtering** - Filter by category, programming language, or search text
 - **No Web Server Required** - Works on file shares with `file://` URLs
 - **Dynamic Detail Pages** - Single `project-detail.html` loads all content from data.js
 - **Clickable Navigation** - Click dependencies/dependants to navigate between projects
 - **Lineage Visualization** - Visual dependency graph for each project
-- **Modular CSS** - Single `styles.css` for all pages
-- **Navigation** - Breadcrumbs and "Back to Map" links on every page
-- **Cross-Linked** - Related projects are linked together
+- **Modular Data** - Projects organized by category in separate files
+- **Language Grouping** - Special grouping for multi-language projects
+- **Automatic Relationships** - Dependants calculated automatically from dependencies
 - **Responsive** - Works on desktop, tablet, and mobile
 
 ## 🌐 Hosting Options
 
 ### File Share (Current)
 1. Copy the entire `ProjectMap/` folder to a network share
-2. Users open `index.html` directly from the share
+2. Users open `portfolio.html` directly from the share
 3. No configuration needed!
 
 ### Internal Web Server
@@ -86,27 +89,28 @@ Documentation is organized into color-coded categories:
 All project metadata is centralized in `data.js` - update once, reflect everywhere!
 
 ### To Update Project Metadata
-Edit `data.js` and change any property:
+Edit the appropriate category file in `ProjectData/` (e.g., `warehouse.js`):
 ```javascript
-"dwh-core": {
-    title: "Data Warehouse (DWH Core)",  // Page title
-    category: "Warehouse",                // Category
-    breadcrumb: "Warehouse / DWH Core",   // Navigation breadcrumb
-    shortDescription: "...",              // Portfolio map description
+"BI_Warehouse": {
+    title: "Data Warehouse (DWH Core)",   // Page title
+    name: "Data Warehouse",               // Display name
+    category: "Warehouse",                // Category (defines color)
+    languages: ["SQL", "PowerShell"],     // Programming languages
+    shortDescription: "...",              // Portfolio list description
+    overview: "...",                      // Detailed description
     location: ["DWH/"],                   // File locations
     dependencies: [],                     // What this depends on
-    integrations: ["dwh-admin"]           // What integrates with this
+    integrations: ["BI_QlikView"],        // What integrates with this
+    requirements: [],                     // Prerequisites
+    contactSupport: []                    // Support contacts
 }
 ```
 
 Changes automatically propagate to:
-- Portfolio map
-- Breadcrumb navigation
-- Page titles
-- Category colors
-
-### To Update Page Content
-Simply edit the HTML file in `ProjectData/` - the content section is independent of metadata.
+- Portfolio list view
+- Detail pages
+- Lineage visualization
+- Category colors (from `categories` object in `data.js`)
 
 ### Adding a New Project
 1. **Add to appropriate category file** (e.g., `ProjectData/warehouse.js`, `ProjectData/qlikview.js`, etc.):
@@ -136,15 +140,14 @@ Simply edit the HTML file in `ProjectData/` - the content section is independent
 
 3. **Color is inherited** from the category definition in `data.js` - no need to specify per-project
 
-3. **Update `index.html`** to add link in appropriate category
-
 ### Changing Global Styles
 Edit `styles.css` - changes apply to all pages immediately.
 
 ## 🔗 Quick Links
 
-- [index.html](index.html) - Documentation hub
-- [portfolio.html](portfolio.html) - Interactive project map
+- [portfolio.html](portfolio.html) - Interactive project portfolio (START HERE)
+- [project-detail.html](project-detail.html) - Dynamic project detail pages
+- [data.js](data.js) - Central data aggregation
 - [styles.css](styles.css) - Shared stylesheet
 
 ---

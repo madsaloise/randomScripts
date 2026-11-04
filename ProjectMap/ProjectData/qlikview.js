@@ -1,23 +1,16 @@
 // QlikView category projects
 const qlikviewProjects = {
     "BI_QlikView": {
-        title: "QlikView Engine",
-        name: "QlikView Engine",
+        title: "BI QlikView",
+        name: "BI QlikView",
         category: "QlikView",
-        languages: ["PowerShell", "Qlik"],
-        shortDescription: "QlikView client libraries and automation",
-        overview: "PowerShell class-based client library for QlikView automation. Provides programmatic access to QlikView Desktop for opening, reloading, and saving QVW files. Used across multiple automation projects.",
-        location: ["pwshProfile/QlikClasses/"],
+        languages: ["Git", "Qlik"],
+        shortDescription: "Repository, der anvendes til at arbejde med QlikView-udvikling.",
+        overview: "Dette repository indeholder QlikView-projekter, udviklingsværktøjer og ressourcer til at understøtte BI-udvikling og vedligeholdelse. Det fungerer som en central hub for QlikView-relaterede aktiviteter, herunder scriptudvikling, applikationsdesign og samarbejde mellem udviklere.",
+        location: ["https://devops.anklagemyndigheden.net/Analyse/Analyse%20og%20udvikling/_git/BI-QlikView/"],
         dependencies: ["SQLToQV_Converter"],
-        integrations: ["qv-automation", "monthly-tasks", "sql-qv-converter", "pwsh-profile"],
-        requirements: [
-            "QlikView Desktop installed",
-            "PowerShell 5.1 or higher",
-            "QlikViewClient.ps1 class loaded"
-        ],
-        contactSupport: [
-            "QlikView development team",
-            "See QlikViewClient.ps1 for usage examples"
-        ]
+        integrations: ["QV-ReleasePipeline", "monthly-tasks"],
+        requirements: ["QlikView Desktop","Git"],
+        contactSupport: ["radfpudvikling@ankl.dk"]
     }
 };

@@ -7,9 +7,9 @@ const otherToolsProjects = {
         languages: ["PowerShell"],
         shortDescription: "Custom PowerShell profile with Qlik clients and utilities",
         overview: "Custom PowerShell profile with enhanced logging, Qlik client classes, Outlook integration, and utility modules. Provides reusable components for BI automation and system administration tasks.",
-        location: ["pwshProfile/"],
-        dependencies: ["qlik-sense", "qlikview-engine"],
-        integrations: ["monthly-tasks", "qv-automation", "devops-integration"],
+        location: ["https://devops.anklagemyndigheden.net/Analyse/Analyse%20og%20udvikling/_git/MchWork?path=/pwshProfile/"],
+        dependencies: ["BI_QlikView", "BI_QlikSense"],
+        integrations: [],
         requirements: [
             "PowerShell 5.1 or higher",
             "Profile installed in $PROFILE directory",
