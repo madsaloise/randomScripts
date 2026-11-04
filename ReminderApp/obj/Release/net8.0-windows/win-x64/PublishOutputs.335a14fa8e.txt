@@ -1,0 +1,5 @@
+C:\Users\b119820\source\repos\ReminderApp\bin\Release\net8.0-windows\win-x64\publish\ReminderApp.exe
+C:\Users\b119820\source\repos\ReminderApp\bin\Release\net8.0-windows\win-x64\publish\ReminderApp.dll
+C:\Users\b119820\source\repos\ReminderApp\bin\Release\net8.0-windows\win-x64\publish\ReminderApp.deps.json
+C:\Users\b119820\source\repos\ReminderApp\bin\Release\net8.0-windows\win-x64\publish\ReminderApp.runtimeconfig.json
+C:\Users\b119820\source\repos\ReminderApp\bin\Release\net8.0-windows\win-x64\publish\ReminderApp.pdb

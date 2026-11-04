@@ -1,0 +1,55 @@
+﻿<Window x:Class="ReminderApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Reminders" Height="520" Width="540"        Icon="app.ico"        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="10,4"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel LastChildFill="True">
+        <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="6">
+            <Button x:Name="BtnNew"          Content="Ny..."                     Click="BtnNew_Click"/>
+            <Button x:Name="BtnEdit"         Content="Rediger..."                Click="BtnEdit_Click"/>
+            <Button x:Name="BtnDone"         Content="Marker udført"             Click="BtnDone_Click"/>
+            <Button x:Name="BtnAwait"        Content="Afventer andre"            Click="BtnAwait_Click"/>
+            <Button x:Name="BtnReopen"       Content="Genåbn"                    Click="BtnReopen_Click"/>
+            <Separator Width="10" Visibility="Hidden"/>
+            <Button x:Name="BtnSnooze15"     Content="Udskyd 15 min"             Click="BtnSnooze15_Click"/>
+            <Button x:Name="BtnSnooze1h"     Content="Udskyd 1 time"             Click="BtnSnooze1h_Click"/>
+            <Button x:Name="BtnSnoozeTom"    Content="Udskyd til i morgen 10:00" Click="BtnSnoozeTom_Click"/>
+            <Button x:Name="BtnSnoozeCustom" Content="Udskyd..."                 Click="BtnSnoozeCustom_Click"/>
+            <Separator Width="10" Visibility="Hidden"/>
+            <Button x:Name="BtnDelete"       Content="Slet"                      Click="BtnDelete_Click"/>
+        </WrapPanel>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="6">
+            <CheckBox x:Name="ChkShowDone" Content="Vis afsluttede" VerticalAlignment="Center" Margin="4,0"
+                      Checked="ChkShowDone_Changed" Unchecked="ChkShowDone_Changed"/>
+            <TextBlock x:Name="TxtStatus" Margin="12,0" VerticalAlignment="Center" Foreground="Gray"/>
+        </StackPanel>
+        <DataGrid x:Name="Grid" AutoGenerateColumns="False" IsReadOnly="True"
+                  SelectionMode="Single" CanUserAddRows="False" CanUserDeleteRows="False"
+                  HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                  MouseDoubleClick="Grid_MouseDoubleClick">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tekst"   Binding="{Binding Text}"    Width="*"/>
+                <DataGridTextColumn Header="Forfald" Binding="{Binding DueText}" Width="140"/>
+                <DataGridTextColumn Header="Status"  Binding="{Binding Status}"  Width="130"/>
+                <DataGridTextColumn Header="Noter"   Binding="{Binding Notes}"   Width="220"/>
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Overdue}" Value="True">
+                            <Setter Property="Background" Value="#FFF3CD"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Done">
+                            <Setter Property="Foreground" Value="Gray"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
+    </DockPanel>
+</Window>
